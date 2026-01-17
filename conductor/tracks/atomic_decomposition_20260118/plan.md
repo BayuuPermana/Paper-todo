@@ -3,7 +3,7 @@
 ## Phase 1: Data Model & State Refactoring
 **Goal:** Update the application state to support nested sub-tasks.
 
-- [ ] Task: Refactor `App.jsx` state to support `subTasks` array in Todo objects.
+- [x] Task: Refactor `App.jsx` state to support `subTasks` array in Todo objects. aac8960
 - [ ] Task: Update `AddTodo` to (optionally) allow adding sub-tasks immediately or handle it in the item view. *Decision: For MVP, keep AddTodo simple. Add sub-tasks from the TodoItem component.*
 - [ ] Task: Create `SubTaskItem` component.
 - [ ] Task: Update `TodoItem` to render `SubTaskItem` components.
