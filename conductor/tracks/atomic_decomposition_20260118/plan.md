@@ -22,7 +22,7 @@
 ## Phase 3: Advanced Interactions & Polish
 **Goal:** Ensure drag-and-drop works and finalize the UX.
 
-- [ ] Task: Verify and fix `react-beautiful-dnd` integration for main tasks with the new layout.
+- [x] Task: Verify and fix `react-beautiful-dnd` integration for main tasks with the new layout. 2330f70
 - [ ] Task: Implement progress indicator on Main Task (e.g., "2/5 steps") based on sub-task completion.
 - [ ] Task: Polish animations and transitions.
 - [ ] Task: Conductor - User Manual Verification 'Advanced Interactions & Polish' (Protocol in workflow.md)
