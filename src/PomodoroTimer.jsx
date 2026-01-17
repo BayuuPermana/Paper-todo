@@ -1,39 +1,66 @@
 import React, { useState, useEffect } from 'react';
 
 function PomodoroTimer({ activeSubTaskName, onTaskComplete }) {
+  const PRESETS = [15, 25, 45, 60];
+  const [selectedPreset, setSelectedPreset] = useState(25);
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isActive, setIsActive] = useState(false);
+  const [isFlowMode, setIsFlowMode] = useState(true);
+  const [totalFocusTime, setTotalFocusTime] = useState(0);
+  const [isBurnedOut, setIsBurnedOut] = useState(false);
 
   useEffect(() => {
     let interval = null;
-    if (isActive && timeLeft > 0) {
+    if (isActive && !isBurnedOut) {
       interval = setInterval(() => {
-        setTimeLeft((time) => time - 1);
+        setTimeLeft((time) => {
+          if (time <= 0 && isFlowMode) {
+            return time - 1; 
+          }
+          if (time === 0) {
+            setIsActive(false);
+            return 0;
+          }
+          return time - 1;
+        });
+        setTotalFocusTime(t => t + 1);
       }, 1000);
-    } else if (timeLeft === 0) {
-      clearInterval(interval);
-      setIsActive(false);
-      // Play a sound or alert here if we wanted to be fancy
     }
     return () => clearInterval(interval);
-  }, [isActive, timeLeft]);
+  }, [isActive, isFlowMode, isBurnedOut]);
 
-  // Reset timer if task changes
   useEffect(() => {
-    setTimeLeft(25 * 60);
-    setIsActive(false);
-  }, [activeSubTaskName]);
+    if (totalFocusTime >= 90 * 60) {
+      setIsBurnedOut(true);
+      setIsActive(false);
+    }
+  }, [totalFocusTime]);
 
-  const toggleTimer = () => setIsActive(!isActive);
-  const resetTimer = () => {
-    setTimeLeft(25 * 60);
+  useEffect(() => {
+    setTimeLeft(selectedPreset * 60);
     setIsActive(false);
+  }, [selectedPreset, activeSubTaskName]);
+
+  const toggleTimer = () => {
+    if (isBurnedOut) return;
+    setIsActive(!isActive);
+  };
+
+  const resetTimer = () => {
+    setTimeLeft(selectedPreset * 60);
+    setIsActive(false);
+    if (isBurnedOut) {
+        setTotalFocusTime(0);
+        setIsBurnedOut(false);
+    }
   };
 
   const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    const isNegative = seconds < 0;
+    const absSeconds = Math.abs(seconds);
+    const mins = Math.floor(absSeconds / 60);
+    const secs = absSeconds % 60;
+    return `${isNegative ? '-' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
   return (
@@ -42,19 +69,56 @@ function PomodoroTimer({ activeSubTaskName, onTaskComplete }) {
       border: '2px solid black',
       borderRadius: '5px',
       boxShadow: '3px 3px 0px black',
-      backgroundColor: '#fff',
-      textAlign: 'center'
+      backgroundColor: isBurnedOut ? '#ffcdd2' : '#fff',
+      textAlign: 'center',
+      position: 'relative'
     }}>
-      <h3 style={{ marginTop: 0, fontSize: '1.2em' }}>Pomodoro</h3>
+      <h3 style={{ marginTop: 0, fontSize: '1.2em' }}>
+        {isBurnedOut ? '⚠️ BURNOUT SHIELD' : 'Focus Engine'}
+      </h3>
       
-      {activeSubTaskName ? (
-        <div style={{ marginBottom: '15px' }}>
-          <span style={{ fontSize: '0.9em', color: '#666' }}>Focusing on:</span>
-          <div style={{ fontWeight: 'bold', fontSize: '1.1em' }}>{activeSubTaskName}</div>
+      {isBurnedOut ? (
+        <div style={{ padding: '10px', color: '#b71c1c', fontWeight: 'bold' }}>
+          Mandatory Recovery Mode Active. <br/> Take a 5-minute break.
         </div>
       ) : (
-        <div style={{ marginBottom: '15px', fontStyle: 'italic', color: '#aaa' }}>
-          Select a step to focus
+        <>
+          <div style={{ display: 'flex', gap: '5px', justifyContent: 'center', marginBottom: '15px' }}>
+            {PRESETS.map(p => (
+              <button 
+                key={p}
+                onClick={() => setSelectedPreset(p)}
+                style={{
+                  padding: '2px 8px',
+                  border: '1px solid black',
+                  backgroundColor: selectedPreset === p ? '#eee' : '#fff',
+                  cursor: 'pointer',
+                  fontSize: '0.8em',
+                  boxShadow: selectedPreset === p ? 'inset 1px 1px 2px rgba(0,0,0,0.2)' : '1px 1px 0px black'
+                }}
+              >
+                {p}m
+              </button>
+            ))}
+          </div>
+
+          <div style={{ marginBottom: '10px' }}>
+            <label style={{ fontSize: '0.8em', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
+              <input 
+                type="checkbox" 
+                checked={isFlowMode} 
+                onChange={() => setIsFlowMode(!isFlowMode)}
+              />
+              Flow Mode (Auto-Continue)
+            </label>
+          </div>
+        </>
+      )}
+
+      {activeSubTaskName && !isBurnedOut && (
+        <div style={{ marginBottom: '15px' }}>
+          <span style={{ fontSize: '0.7em', color: '#666' }}>Active Focus:</span>
+          <div style={{ fontWeight: 'bold', fontSize: '1em' }}>{activeSubTaskName}</div>
         </div>
       )}
 
@@ -65,7 +129,8 @@ function PomodoroTimer({ activeSubTaskName, onTaskComplete }) {
         margin: '10px 0',
         padding: '10px',
         border: '1px solid #eee',
-        backgroundColor: '#fafafa'
+        backgroundColor: timeLeft < 0 ? '#e8f5e9' : '#fafafa',
+        color: timeLeft < 0 ? '#2e7d32' : '#333'
       }}>
         {formatTime(timeLeft)}
       </div>
@@ -73,12 +138,14 @@ function PomodoroTimer({ activeSubTaskName, onTaskComplete }) {
       <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
         <button 
           onClick={toggleTimer}
+          disabled={isBurnedOut}
           style={{
             padding: '5px 15px',
             border: '2px solid black',
             backgroundColor: isActive ? '#ffccbc' : '#c8e6c9',
-            cursor: 'pointer',
-            fontWeight: 'bold'
+            cursor: isBurnedOut ? 'not-allowed' : 'pointer',
+            fontWeight: 'bold',
+            opacity: isBurnedOut ? 0.5 : 1
           }}
         >
           {isActive ? 'Pause' : 'Start'}
@@ -92,9 +159,15 @@ function PomodoroTimer({ activeSubTaskName, onTaskComplete }) {
             cursor: 'pointer'
           }}
         >
-          Reset
+          {isBurnedOut ? 'Recovered' : 'Reset'}
         </button>
       </div>
+
+      {!isBurnedOut && (
+        <div style={{ marginTop: '15px', fontSize: '0.7em', color: '#888' }}>
+          Total Session Focus: {Math.floor(totalFocusTime / 60)}m / 90m
+        </div>
+      )}
     </div>
   );
 }
