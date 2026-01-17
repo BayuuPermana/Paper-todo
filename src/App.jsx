@@ -3,6 +3,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import { v4 as uuidv4 } from 'uuid';
 import TodoList from './TodoList';
 import AddTodo from './AddTodo';
+import PomodoroTimer from './PomodoroTimer';
 
 const STORAGE_KEY = 'paper-todos';
 
@@ -16,6 +17,8 @@ function App() {
       subTasks: todo.subTasks || []
     }));
   });
+
+  const [activeSubTask, setActiveSubTask] = useState(null);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
@@ -45,6 +48,9 @@ function App() {
   };
 
   const deleteTodo = (id) => {
+    if (activeSubTask && todos.find(t => t.id === id)?.subTasks.some(st => st.id === activeSubTask.subTaskId)) {
+      setActiveSubTask(null);
+    }
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
@@ -68,9 +74,16 @@ function App() {
       if (todo.id === todoId) {
         return {
           ...todo,
-          subTasks: todo.subTasks.map(st => 
-            st.id === subTaskId ? { ...st, completed: !st.completed } : st
-          )
+          subTasks: todo.subTasks.map(st => {
+            if (st.id === subTaskId) {
+              const newCompleted = !st.completed;
+              if (newCompleted && activeSubTask?.subTaskId === subTaskId) {
+                setActiveSubTask(null);
+              }
+              return { ...st, completed: newCompleted };
+            }
+            return st;
+          })
         };
       }
       return todo;
@@ -78,6 +91,9 @@ function App() {
   };
 
   const deleteSubTask = (todoId, subTaskId) => {
+    if (activeSubTask?.subTaskId === subTaskId) {
+      setActiveSubTask(null);
+    }
     setTodos(todos.map(todo => {
       if (todo.id === todoId) {
         return {
@@ -87,6 +103,17 @@ function App() {
       }
       return todo;
     }));
+  };
+
+  const startFocus = (todoId, subTaskId) => {
+    setActiveSubTask({ todoId, subTaskId });
+  };
+
+  const getActiveSubTaskName = () => {
+    if (!activeSubTask) return null;
+    const todo = todos.find(t => t.id === activeSubTask.todoId);
+    const subTask = todo?.subTasks.find(st => st.id === activeSubTask.subTaskId);
+    return subTask?.text || null;
   };
 
   return (
@@ -101,12 +128,14 @@ function App() {
             onAddSubTask={addSubTask}
             onToggleSubTask={toggleSubTask}
             onDeleteSubTask={deleteSubTask}
+            onSubTaskFocus={startFocus}
+            activeSubTaskId={activeSubTask?.subTaskId}
           />
         </DragDropContext>
       </div>
       <div className="right-segment">
         <div className="calendar-placeholder">Calendar (Coming Soon)</div>
-        <div className="timer-placeholder">Timer (Coming Soon)</div>
+        <PomodoroTimer activeSubTaskName={getActiveSubTaskName()} />
       </div>
     </div>
   );

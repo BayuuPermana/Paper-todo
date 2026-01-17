@@ -1,9 +1,19 @@
 import React from 'react';
 import trashIcon from './assets/trash-bin-icon.png';
 
-function SubTaskItem({ subTask, onToggle, onDelete }) {
+function SubTaskItem({ subTask, onToggle, onDelete, onFocus, isFocused }) {
   return (
-    <div className="sub-task-item" style={{ marginLeft: '20px', fontSize: '0.9em', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '5px' }}>
+    <div className={`sub-task-item ${isFocused ? 'focused' : ''}`} style={{ 
+      marginLeft: '20px', 
+      fontSize: '0.9em', 
+      display: 'flex', 
+      alignItems: 'center', 
+      justifyContent: 'space-between', 
+      marginBottom: '5px',
+      backgroundColor: isFocused ? '#fff9c4' : 'transparent',
+      borderRadius: '3px',
+      padding: '2px 5px'
+    }}>
       <div style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}>
         <span style={{ marginRight: '5px' }}>-</span>
         <button
@@ -18,7 +28,21 @@ function SubTaskItem({ subTask, onToggle, onDelete }) {
           {subTask.text}
         </button>
       </div>
-      <div className="todo-actions" style={{ marginLeft: '10px' }}>
+      <div className="todo-actions" style={{ marginLeft: '10px', display: 'flex', alignItems: 'center' }}>
+        <button
+          onClick={() => onFocus(subTask.id)}
+          title="Focus on this task"
+          style={{ 
+            background: 'none', 
+            border: 'none', 
+            cursor: 'pointer', 
+            fontSize: '1.1em',
+            marginRight: '5px',
+            opacity: isFocused ? 1 : 0.3
+          }}
+        >
+          🎯
+        </button>
         <button
           className="delete-icon"
           onClick={() => onDelete(subTask.id)}

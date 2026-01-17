@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import trashIcon from './assets/trash-bin-icon.png';
 import SubTaskItem from './SubTaskItem';
 
-function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskToggle, onSubTaskDelete }) {
+function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskToggle, onSubTaskDelete, onSubTaskFocus, activeSubTaskId }) {
   const [isAddingSubTask, setIsAddingSubTask] = useState(false);
   const [subTaskText, setSubTaskText] = useState('');
 
@@ -54,6 +54,8 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
               subTask={subTask}
               onToggle={onSubTaskToggle}
               onDelete={onSubTaskDelete}
+              onFocus={onSubTaskFocus}
+              isFocused={activeSubTaskId === subTask.id}
             />
           ))}
           

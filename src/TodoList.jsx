@@ -3,7 +3,7 @@ import { Draggable } from 'react-beautiful-dnd';
 import TodoItem from './TodoItem';
 import { StrictModeDroppable } from './StrictModeDroppable';
 
-function TodoList({ todos, onToggleComplete, onDelete, onAddSubTask, onToggleSubTask, onDeleteSubTask }) {
+function TodoList({ todos, onToggleComplete, onDelete, onAddSubTask, onToggleSubTask, onDeleteSubTask, onSubTaskFocus, activeSubTaskId }) {
   return (
     <StrictModeDroppable droppableId="todos">
       {(provided) => (
@@ -26,6 +26,8 @@ function TodoList({ todos, onToggleComplete, onDelete, onAddSubTask, onToggleSub
                     onAddSubTask={onAddSubTask}
                     onSubTaskToggle={(subTaskId) => onToggleSubTask(todo.id, subTaskId)}
                     onSubTaskDelete={(subTaskId) => onDeleteSubTask(todo.id, subTaskId)}
+                    onSubTaskFocus={(subTaskId) => onSubTaskFocus(todo.id, subTaskId)}
+                    activeSubTaskId={activeSubTaskId}
                   />
                 </div>
               )}
