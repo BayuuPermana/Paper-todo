@@ -31,19 +31,23 @@ body {
       z-index: -1;
     }
     
+.todo-draggable {
+      margin-bottom: 15px;
+    }
+
+    .todo-container.completed {
+      opacity: 0.5;
+    }
+
     .todo-item {
       background-color: #fff;
-      border: none;
-      border-bottom: 1px solid #eee; /* Lined paper feel */
-      border-radius: 0;
-      padding: 15px 0;
-      margin-bottom: 0;
+      border: 2px solid black;
+      border-radius: 5px;
+      padding: 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: none;
-      position: relative;
-      z-index: 1;
+      box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
     }
 
     /* Hover effect for items */

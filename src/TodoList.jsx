@@ -15,9 +15,9 @@ function TodoList({ todos, onToggleComplete, onDelete, onAddSubTask, onToggleSub
                   ref={provided.innerRef}
                   {...provided.draggableProps}
                   {...provided.dragHandleProps}
-                  className={`todo-item ${
+                  className={`todo-draggable ${
                     snapshot.isDragging ? 'dragging' : ''
-                  } ${todo.completed ? 'completed' : ''}`}
+                  }`}
                 >
                   <TodoItem
                     todo={todo}

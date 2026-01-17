@@ -15,7 +15,7 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
   };
 
   return (
-    <div className="todo-container">
+    <div className={`todo-container ${todo.completed ? 'completed' : ''}`}>
       <div className="todo-item">
         <button
           type="button"
