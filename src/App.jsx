@@ -91,17 +91,23 @@ function App() {
 
   return (
     <div className="paper-container">
-      <AddTodo onAdd={addTodo} />
-      <DragDropContext onDragEnd={handleDragEnd}>
-        <TodoList
-          todos={todos}
-          onToggleComplete={toggleComplete}
-          onDelete={deleteTodo}
-          onAddSubTask={addSubTask}
-          onToggleSubTask={toggleSubTask}
-          onDeleteSubTask={deleteSubTask}
-        />
-      </DragDropContext>
+      <div className="left-segment">
+        <AddTodo onAdd={addTodo} />
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <TodoList
+            todos={todos}
+            onToggleComplete={toggleComplete}
+            onDelete={deleteTodo}
+            onAddSubTask={addSubTask}
+            onToggleSubTask={toggleSubTask}
+            onDeleteSubTask={deleteSubTask}
+          />
+        </DragDropContext>
+      </div>
+      <div className="right-segment">
+        <div className="calendar-placeholder">Calendar (Coming Soon)</div>
+        <div className="timer-placeholder">Timer (Coming Soon)</div>
+      </div>
     </div>
   );
 }

@@ -12,8 +12,8 @@ body {
     }
 
     .paper-container {
-      width: 90%;
-      max-width: 600px;
+      width: 95%;
+      max-width: 1200px;
       background-color: #fff;
       box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
       padding: 30px;
@@ -21,6 +21,36 @@ body {
       border-radius: 10px;
       position: relative;
       margin: auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .left-segment {
+      min-width: 0;
+    }
+
+    .right-segment {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      border-left: 2px dashed #ccc;
+      padding-left: 30px;
+    }
+
+    @media (max-width: 1024px) {
+      .paper-container {
+        grid-template-columns: 1fr;
+        max-width: 600px;
+      }
+
+      .right-segment {
+        border-left: none;
+        border-top: 2px dashed #ccc;
+        padding-left: 0;
+        padding-top: 30px;
+      }
     }
 
     .paper-container::before {
