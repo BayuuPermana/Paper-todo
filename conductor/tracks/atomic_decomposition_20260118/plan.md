@@ -24,5 +24,5 @@
 
 - [x] Task: Verify and fix `react-beautiful-dnd` integration for main tasks with the new layout. 2330f70
 - [x] Task: Implement progress indicator on Main Task (e.g., "2/5 steps") based on sub-task completion. e0e7506
-- [ ] Task: Polish animations and transitions.
+- [x] Task: Polish animations and transitions. 84003f9
 - [ ] Task: Conductor - User Manual Verification 'Advanced Interactions & Polish' (Protocol in workflow.md)
