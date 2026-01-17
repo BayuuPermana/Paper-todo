@@ -17,7 +17,7 @@
 - [x] Task: Apply scribble animation to `TodoItem` on completion. 83b2e9a
 - [x] Task: Apply scribble animation to `SubTaskItem` on completion. 83b2e9a
 - [x] Task: Refactor layout to use "Paper" aesthetic (off-white background, subtle shadows, consistent typography) as defined in `product-guidelines.md`. e937579
-- [ ] Task: Conductor - User Manual Verification 'Tactile Visuals (The "Paper" Feel)' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Tactile Visuals (The "Paper" Feel)' (Protocol in workflow.md) [checkpoint: 9b54bdb]
 
 ## Phase 3: Advanced Interactions & Polish
 **Goal:** Ensure drag-and-drop works and finalize the UX.
