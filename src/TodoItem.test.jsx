@@ -52,4 +52,16 @@ describe('TodoItem', () => {
     expect(screen.getByText('Subtask 1')).toBeInTheDocument();
     expect(screen.getByText('Subtask 2')).toBeInTheDocument();
   });
+
+  it('displays progress indicator when subtasks exist', () => {
+    render(
+      <TodoItem
+        todo={mockTodo}
+        onToggleComplete={mockToggle}
+        onDelete={mockDelete}
+      />
+    );
+    // mockTodo has 2 subtasks, 1 completed
+    expect(screen.getByText(/1\/2/)).toBeInTheDocument();
+  });
 });

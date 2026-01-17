@@ -14,6 +14,9 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
     setIsAddingSubTask(false);
   };
 
+  const completedSubTasks = todo.subTasks ? todo.subTasks.filter(st => st.completed).length : 0;
+  const totalSubTasks = todo.subTasks ? todo.subTasks.length : 0;
+
   return (
     <div className={`todo-container ${todo.completed ? 'completed' : ''}`}>
       <div className="todo-item">
@@ -26,6 +29,11 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
           }`}
         >
           {todo.text}
+          {totalSubTasks > 0 && (
+            <span className="progress-indicator" style={{ fontSize: '0.7em', marginLeft: '10px', color: '#888' }}>
+              ({completedSubTasks}/{totalSubTasks} steps)
+            </span>
+          )}
         </button>
         <div className="todo-actions">
           <button
