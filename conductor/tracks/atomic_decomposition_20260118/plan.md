@@ -1,0 +1,28 @@
+# Track Plan: Atomic Decomposition
+
+## Phase 1: Data Model & State Refactoring
+**Goal:** Update the application state to support nested sub-tasks.
+
+- [ ] Task: Refactor `App.jsx` state to support `subTasks` array in Todo objects.
+- [ ] Task: Update `AddTodo` to (optionally) allow adding sub-tasks immediately or handle it in the item view. *Decision: For MVP, keep AddTodo simple. Add sub-tasks from the TodoItem component.*
+- [ ] Task: Create `SubTaskItem` component.
+- [ ] Task: Update `TodoItem` to render `SubTaskItem` components.
+- [ ] Task: Implement "Add Sub-task" functionality within `TodoItem`.
+- [ ] Task: Conductor - User Manual Verification 'Data Model & State Refactoring' (Protocol in workflow.md)
+
+## Phase 2: Tactile Visuals (The "Paper" Feel)
+**Goal:** Implement the "scribble" effect and improve the visual hierarchy.
+
+- [ ] Task: Create CSS/SVG assets for the "scribble" strikethrough effect.
+- [ ] Task: Apply scribble animation to `TodoItem` on completion.
+- [ ] Task: Apply scribble animation to `SubTaskItem` on completion.
+- [ ] Task: Refactor layout to use "Paper" aesthetic (off-white background, subtle shadows, consistent typography) as defined in `product-guidelines.md`.
+- [ ] Task: Conductor - User Manual Verification 'Tactile Visuals (The "Paper" Feel)' (Protocol in workflow.md)
+
+## Phase 3: Advanced Interactions & Polish
+**Goal:** Ensure drag-and-drop works and finalize the UX.
+
+- [ ] Task: Verify and fix `react-beautiful-dnd` integration for main tasks with the new layout.
+- [ ] Task: Implement progress indicator on Main Task (e.g., "2/5 steps") based on sub-task completion.
+- [ ] Task: Polish animations and transitions.
+- [ ] Task: Conductor - User Manual Verification 'Advanced Interactions & Polish' (Protocol in workflow.md)
