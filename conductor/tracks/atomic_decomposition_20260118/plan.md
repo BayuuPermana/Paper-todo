@@ -7,7 +7,7 @@
 - [x] Task: Update `AddTodo` to (optionally) allow adding sub-tasks immediately or handle it in the item view. *Decision: For MVP, keep AddTodo simple. Add sub-tasks from the TodoItem component.*
 - [x] Task: Create `SubTaskItem` component. 9891010
 - [x] Task: Update `TodoItem` to render `SubTaskItem` components. 8c36c34
-- [ ] Task: Implement "Add Sub-task" functionality within `TodoItem`.
+- [x] Task: Implement "Add Sub-task" functionality within `TodoItem`. 6811baf
 - [ ] Task: Conductor - User Manual Verification 'Data Model & State Refactoring' (Protocol in workflow.md)
 
 ## Phase 2: Tactile Visuals (The "Paper" Feel)
