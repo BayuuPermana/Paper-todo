@@ -13,7 +13,7 @@
 ## Phase 2: Tactile Visuals (The "Paper" Feel)
 **Goal:** Implement the "scribble" effect and improve the visual hierarchy.
 
-- [ ] Task: Create CSS/SVG assets for the "scribble" strikethrough effect.
+- [x] Task: Create CSS/SVG assets for the "scribble" strikethrough effect. 83b2e9a
 - [ ] Task: Apply scribble animation to `TodoItem` on completion.
 - [ ] Task: Apply scribble animation to `SubTaskItem` on completion.
 - [ ] Task: Refactor layout to use "Paper" aesthetic (off-white background, subtle shadows, consistent typography) as defined in `product-guidelines.md`.
