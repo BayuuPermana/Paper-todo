@@ -4,7 +4,7 @@
 **Goal:** Update the application state to support nested sub-tasks.
 
 - [x] Task: Refactor `App.jsx` state to support `subTasks` array in Todo objects. aac8960
-- [ ] Task: Update `AddTodo` to (optionally) allow adding sub-tasks immediately or handle it in the item view. *Decision: For MVP, keep AddTodo simple. Add sub-tasks from the TodoItem component.*
+- [x] Task: Update `AddTodo` to (optionally) allow adding sub-tasks immediately or handle it in the item view. *Decision: For MVP, keep AddTodo simple. Add sub-tasks from the TodoItem component.*
 - [ ] Task: Create `SubTaskItem` component.
 - [ ] Task: Update `TodoItem` to render `SubTaskItem` components.
 - [ ] Task: Implement "Add Sub-task" functionality within `TodoItem`.
