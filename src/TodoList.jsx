@@ -1,37 +1,41 @@
 import React from 'react';
-    import { Droppable, Draggable } from 'react-beautiful-dnd';
-    import TodoItem from './TodoItem';
+import { Draggable } from 'react-beautiful-dnd';
+import TodoItem from './TodoItem';
+import { StrictModeDroppable } from './StrictModeDroppable';
 
-    function TodoList({ todos, onToggleComplete, onDelete }) {
-      return (
-        <Droppable droppableId="todos">
-          {(provided) => (
-            <div {...provided.droppableProps} ref={provided.innerRef}>
-              {todos.map((todo, index) => (
-                <Draggable key={todo.id} draggableId={todo.id} index={index}>
-                  {(provided, snapshot) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className={`todo-item ${
-                        snapshot.isDragging ? 'dragging' : ''
-                      } ${todo.completed ? 'completed' : ''}`}
-                    >
-                      <TodoItem
-                        todo={todo}
-                        onToggleComplete={onToggleComplete}
-                        onDelete={onDelete}
-                      />
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      );
-    }
+function TodoList({ todos, onToggleComplete, onDelete, onAddSubTask, onToggleSubTask, onDeleteSubTask }) {
+  return (
+    <StrictModeDroppable droppableId="todos">
+      {(provided) => (
+        <div {...provided.droppableProps} ref={provided.innerRef}>
+          {todos.map((todo, index) => (
+            <Draggable key={todo.id} draggableId={todo.id} index={index}>
+              {(provided, snapshot) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.draggableProps}
+                  {...provided.dragHandleProps}
+                  className={`todo-item ${
+                    snapshot.isDragging ? 'dragging' : ''
+                  } ${todo.completed ? 'completed' : ''}`}
+                >
+                  <TodoItem
+                    todo={todo}
+                    onToggleComplete={onToggleComplete}
+                    onDelete={onDelete}
+                    onAddSubTask={onAddSubTask}
+                    onSubTaskToggle={(subTaskId) => onToggleSubTask(todo.id, subTaskId)}
+                    onSubTaskDelete={(subTaskId) => onDeleteSubTask(todo.id, subTaskId)}
+                  />
+                </div>
+              )}
+            </Draggable>
+          ))}
+          {provided.placeholder}
+        </div>
+      )}
+    </StrictModeDroppable>
+  );
+}
 
-    export default TodoList;
+export default TodoList;

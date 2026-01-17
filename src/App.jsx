@@ -48,6 +48,47 @@ function App() {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  const addSubTask = (todoId, text) => {
+    setTodos(todos.map(todo => {
+      if (todo.id === todoId) {
+        return {
+          ...todo,
+          subTasks: [
+            ...todo.subTasks,
+            { id: uuidv4(), text, completed: false }
+          ]
+        };
+      }
+      return todo;
+    }));
+  };
+
+  const toggleSubTask = (todoId, subTaskId) => {
+    setTodos(todos.map(todo => {
+      if (todo.id === todoId) {
+        return {
+          ...todo,
+          subTasks: todo.subTasks.map(st => 
+            st.id === subTaskId ? { ...st, completed: !st.completed } : st
+          )
+        };
+      }
+      return todo;
+    }));
+  };
+
+  const deleteSubTask = (todoId, subTaskId) => {
+    setTodos(todos.map(todo => {
+      if (todo.id === todoId) {
+        return {
+          ...todo,
+          subTasks: todo.subTasks.filter(st => st.id !== subTaskId)
+        };
+      }
+      return todo;
+    }));
+  };
+
   return (
     <div className="paper-container">
       <AddTodo onAdd={addTodo} />
@@ -56,6 +97,9 @@ function App() {
           todos={todos}
           onToggleComplete={toggleComplete}
           onDelete={deleteTodo}
+          onAddSubTask={addSubTask}
+          onToggleSubTask={toggleSubTask}
+          onDeleteSubTask={deleteSubTask}
         />
       </DragDropContext>
     </div>

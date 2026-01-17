@@ -10,6 +10,14 @@ vi.mock('./assets/trash-bin-icon.png', () => ({
   default: 'test-file-stub',
 }));
 
+vi.mock('./StrictModeDroppable', () => ({
+  StrictModeDroppable: ({ children }) => children({
+    droppableProps: {},
+    innerRef: () => {},
+    placeholder: null,
+  }),
+}));
+
 vi.mock('react-beautiful-dnd', () => ({
   DragDropContext: ({ children }) => children,
   Draggable: ({ children }) => children({
@@ -75,5 +83,48 @@ describe('App', () => {
     const oldTodo = savedTodos.find(t => t.id === '1');
     expect(oldTodo.subTasks).toBeDefined();
     expect(oldTodo.subTasks).toEqual([]);
+  });
+
+  it('adds a subtask to a todo', () => {
+    render(<App />);
+    // Add main task
+    const input = screen.getByPlaceholderText('Add a new task');
+    const addButton = screen.getByText('Add');
+    fireEvent.change(input, { target: { value: 'Main Task' } });
+    fireEvent.click(addButton);
+
+    // Find the add subtask button (not yet existing)
+    // We'll assume a button with text "Add Step" or aria-label "Add subtask"
+    // I'll assume an "Add Step" button appears or is accessible.
+    // Let's assume we need to click "Add Step" to show input, or just an input is there.
+    // For MVP, let's say there is a button "Add Step" that prompts or shows input.
+    // Let's implement a simple prompt for now or an inline input.
+    // Inline input is better.
+    
+    // Add Step test
+    const addStepBtn = screen.getByText('+ Add Step');
+    fireEvent.click(addStepBtn);
+    
+    // Assume it shows an input or uses window.prompt (let's avoid prompt)
+    // Let's assume an input appears.
+    const subTaskInput = screen.getByPlaceholderText('New step');
+    fireEvent.change(subTaskInput, { target: { value: 'First Step' } });
+    fireEvent.submit(subTaskInput);
+
+    expect(screen.getByText('First Step')).toBeInTheDocument();
+
+    // Toggle subtask
+    fireEvent.click(screen.getByText('First Step'));
+    // We expect it to have class 'completed' - checking class might be brittle if we change styling
+    // But SubTaskItem adds 'completed' class.
+    expect(screen.getByText('First Step')).toHaveClass('completed');
+
+    // Delete subtask
+    // Find delete button for subtask
+    // Assuming it's the second delete button on screen (first is main task)
+    // Or we can query by aria-label if we set it correctly in SubTaskItem
+    const deleteSubTaskBtn = screen.getByLabelText('Delete subtask: First Step');
+    fireEvent.click(deleteSubTaskBtn);
+    expect(screen.queryByText('First Step')).not.toBeInTheDocument();
   });
 });

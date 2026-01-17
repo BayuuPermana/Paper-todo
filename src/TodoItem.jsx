@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import trashIcon from './assets/trash-bin-icon.png';
 import SubTaskItem from './SubTaskItem';
 
-function TodoItem({ todo, onToggleComplete, onDelete, onSubTaskToggle, onSubTaskDelete }) {
+function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskToggle, onSubTaskDelete }) {
+  const [isAddingSubTask, setIsAddingSubTask] = useState(false);
+  const [subTaskText, setSubTaskText] = useState('');
+
+  const handleAddSubTask = (e) => {
+    e.preventDefault();
+    if (!subTaskText.trim()) return;
+    onAddSubTask(todo.id, subTaskText);
+    setSubTaskText('');
+    setIsAddingSubTask(false);
+  };
+
   return (
     <div className="todo-container">
       <div className="todo-item">
@@ -26,9 +37,10 @@ function TodoItem({ todo, onToggleComplete, onDelete, onSubTaskToggle, onSubTask
           </button>
         </div>
       </div>
-      {todo.subTasks && todo.subTasks.length > 0 && (
-        <div className="sub-tasks-list">
-          {todo.subTasks.map((subTask) => (
+      
+      {((todo.subTasks && todo.subTasks.length > 0) || isAddingSubTask) && (
+        <div className="sub-tasks-list" style={{ marginLeft: '20px', marginTop: '5px' }}>
+          {todo.subTasks && todo.subTasks.map((subTask) => (
             <SubTaskItem
               key={subTask.id}
               subTask={subTask}
@@ -36,7 +48,31 @@ function TodoItem({ todo, onToggleComplete, onDelete, onSubTaskToggle, onSubTask
               onDelete={onSubTaskDelete}
             />
           ))}
+          
+          {isAddingSubTask && (
+            <form onSubmit={handleAddSubTask} style={{ marginTop: '5px' }}>
+              <input
+                type="text"
+                value={subTaskText}
+                onChange={(e) => setSubTaskText(e.target.value)}
+                placeholder="New step"
+                autoFocus
+                onBlur={() => !subTaskText && setIsAddingSubTask(false)}
+                style={{ fontSize: '0.9em', padding: '2px 5px' }}
+              />
+            </form>
+          )}
         </div>
+      )}
+
+      {!isAddingSubTask && (
+        <button 
+          className="add-step-btn" 
+          onClick={() => setIsAddingSubTask(true)}
+          style={{ marginLeft: '20px', fontSize: '0.8em', color: '#888', background: 'none', border: 'none', cursor: 'pointer', marginTop: '5px' }}
+        >
+          + Add Step
+        </button>
       )}
     </div>
   );
