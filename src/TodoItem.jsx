@@ -58,7 +58,7 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
           ))}
           
           {isAddingSubTask && (
-            <form onSubmit={handleAddSubTask} style={{ marginTop: '5px' }}>
+            <form onSubmit={handleAddSubTask} className="add-subtask-form">
               <input
                 type="text"
                 value={subTaskText}
@@ -66,7 +66,6 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
                 placeholder="New step"
                 autoFocus
                 onBlur={() => !subTaskText && setIsAddingSubTask(false)}
-                style={{ fontSize: '0.9em', padding: '2px 5px' }}
               />
             </form>
           )}
@@ -77,7 +76,6 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
         <button 
           className="add-step-btn" 
           onClick={() => setIsAddingSubTask(true)}
-          style={{ marginLeft: '20px', fontSize: '0.8em', color: '#888', background: 'none', border: 'none', cursor: 'pointer', marginTop: '5px' }}
         >
           + Add Step
         </button>

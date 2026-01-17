@@ -35,6 +35,24 @@ body {
       margin-bottom: 15px;
     }
 
+    .todo-container {
+      transition: opacity 0.3s ease, transform 0.2s ease;
+    }
+
+    .todo-draggable {
+      margin-bottom: 15px;
+      transition: transform 0.2s ease;
+    }
+
+    .sub-tasks-list {
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .todo-container.completed {
       opacity: 0.5;
     }
@@ -106,6 +124,38 @@ body {
       to {
         width: 100%;
       }
+    }
+
+    .add-step-btn {
+      margin-left: 20px;
+      font-size: 0.8em;
+      color: #888;
+      background: none;
+      border: none;
+      cursor: pointer;
+      margin-top: 5px;
+      padding: 5px;
+      transition: color 0.2s, transform 0.1s;
+    }
+
+    .add-step-btn:hover {
+      color: #333;
+      transform: translateX(3px);
+    }
+
+    .add-subtask-form {
+      margin-top: 5px;
+    }
+
+    .add-subtask-form input {
+      font-size: 0.9em;
+      padding: 2px 5px;
+      border: none;
+      border-bottom: 1px solid #ccc;
+      background: transparent;
+      font-family: inherit;
+      outline: none;
+      width: 80%;
     }
 
     .todo-actions button {
