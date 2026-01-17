@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import TodoList from './TodoList';
 import AddTodo from './AddTodo';
 import PomodoroTimer from './PomodoroTimer';
+import PaperCalendar from './PaperCalendar';
 
 const STORAGE_KEY = 'paper-todos';
 
@@ -134,7 +135,7 @@ function App() {
         </DragDropContext>
       </div>
       <div className="right-segment">
-        <div className="calendar-placeholder">Calendar (Coming Soon)</div>
+        <PaperCalendar />
         <PomodoroTimer activeSubTaskName={getActiveSubTaskName()} />
       </div>
     </div>
