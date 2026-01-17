@@ -8,7 +8,7 @@
 - [x] Task: Create `SubTaskItem` component. 9891010
 - [x] Task: Update `TodoItem` to render `SubTaskItem` components. 8c36c34
 - [x] Task: Implement "Add Sub-task" functionality within `TodoItem`. 6811baf
-- [ ] Task: Conductor - User Manual Verification 'Data Model & State Refactoring' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Data Model & State Refactoring' (Protocol in workflow.md) [checkpoint: 7cb17ef]
 
 ## Phase 2: Tactile Visuals (The "Paper" Feel)
 **Goal:** Implement the "scribble" effect and improve the visual hierarchy.
