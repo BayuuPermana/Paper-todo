@@ -17,6 +17,7 @@ import React, { useState } from 'react';
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Add a new task"
+            aria-label="New task description"
           />
           <button type="submit">Add</button>
         </form>

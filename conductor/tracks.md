@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [ ] Track: Implement "Atomic Decomposition": Add nested sub-task support and tactile "Paper-like" visual feedback for task completion.
+## [~] Track: Implement "Atomic Decomposition": Add nested sub-task support and tactile "Paper-like" visual feedback for task completion.
 *Link: [./conductor/tracks/atomic_decomposition_20260118/](./conductor/tracks/atomic_decomposition_20260118/)*
