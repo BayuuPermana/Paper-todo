@@ -26,6 +26,7 @@ describe('SubTaskItem', () => {
       />
     );
     expect(screen.getByText('Subtask 1')).toBeInTheDocument();
+    expect(screen.getByText('-')).toBeInTheDocument();
   });
 
   it('calls onToggle when text is clicked', () => {
