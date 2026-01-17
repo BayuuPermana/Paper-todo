@@ -14,8 +14,8 @@
 **Goal:** Implement the "scribble" effect and improve the visual hierarchy.
 
 - [x] Task: Create CSS/SVG assets for the "scribble" strikethrough effect. 83b2e9a
-- [ ] Task: Apply scribble animation to `TodoItem` on completion.
-- [ ] Task: Apply scribble animation to `SubTaskItem` on completion.
+- [x] Task: Apply scribble animation to `TodoItem` on completion. 83b2e9a
+- [x] Task: Apply scribble animation to `SubTaskItem` on completion. 83b2e9a
 - [ ] Task: Refactor layout to use "Paper" aesthetic (off-white background, subtle shadows, consistent typography) as defined in `product-guidelines.md`.
 - [ ] Task: Conductor - User Manual Verification 'Tactile Visuals (The "Paper" Feel)' (Protocol in workflow.md)
 
