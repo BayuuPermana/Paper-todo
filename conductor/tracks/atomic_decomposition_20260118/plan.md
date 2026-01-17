@@ -6,7 +6,7 @@
 - [x] Task: Refactor `App.jsx` state to support `subTasks` array in Todo objects. aac8960
 - [x] Task: Update `AddTodo` to (optionally) allow adding sub-tasks immediately or handle it in the item view. *Decision: For MVP, keep AddTodo simple. Add sub-tasks from the TodoItem component.*
 - [x] Task: Create `SubTaskItem` component. 9891010
-- [ ] Task: Update `TodoItem` to render `SubTaskItem` components.
+- [x] Task: Update `TodoItem` to render `SubTaskItem` components. 8c36c34
 - [ ] Task: Implement "Add Sub-task" functionality within `TodoItem`.
 - [ ] Task: Conductor - User Manual Verification 'Data Model & State Refactoring' (Protocol in workflow.md)
 
