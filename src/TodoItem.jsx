@@ -84,6 +84,14 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
           </button>
         </div>
       </div>
+
+      {todo.image && (
+        <div className="taped-image-container">
+          <div className="tape-top-left"></div>
+          <img src={todo.image} alt="Evidence" className="taped-image" />
+          <div className="tape-bottom-right"></div>
+        </div>
+      )}
       
       {((todo.subTasks && todo.subTasks.length > 0) || isAddingSubTask) && (
         <div className="sub-tasks-list" style={{ marginLeft: '20px', marginTop: '5px' }}>

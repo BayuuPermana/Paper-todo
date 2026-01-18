@@ -1,6 +1,6 @@
 ---
-id: heatmap-epic
-title: [Epic] Graphite Heatmap & Streaks Protocol
+id: image-epic
+title: [Epic] Visual Evidence Protocol (Image Attachments)
 status: Backlog
 priority: High
 project: project
@@ -9,14 +9,14 @@ updated: 2026-01-18
 links:
   - url: ../../prd.md
     title: PRD
-labels: [core, analytics, ui]
+labels: [core, ui, data]
 assignee: Pickle Rick
 ---
 
 # Description
 
 ## Problem to solve
-Users lack a long-term visual sense of accomplishment. We need to turn their completions into data points that motivate continued effort.
+Tasks are currently text-only, lacking visual context. Users need a way to attach images to projects without exceeding storage limits.
 
 ## Solution
-Implement a GitHub-style heatmap on the calendar using graphite intensities and track daily streaks.
+Implement a visual attachment system with client-side compression and tactile 'Paper' styling.

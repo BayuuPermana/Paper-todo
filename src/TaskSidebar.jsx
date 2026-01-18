@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AddTodo from './AddTodo';
 
 function TaskSidebar({ todos, selectedTodoId, onSelectTodo, onAddTodo }) {
+  const [hoveredImage, setHoveredImage] = useState(null);
+
   return (
     <div className="task-sidebar" style={{
       padding: '20px',
@@ -10,7 +12,8 @@ function TaskSidebar({ todos, selectedTodoId, onSelectTodo, onAddTodo }) {
       backgroundColor: '#f9f9f9',
       display: 'flex',
       flexDirection: 'column',
-      gap: '20px'
+      gap: '20px',
+      position: 'relative'
     }}>
       <h2 style={{ fontSize: '1.2em', margin: 0 }}>Archive Rack</h2>
       
@@ -37,17 +40,37 @@ function TaskSidebar({ todos, selectedTodoId, onSelectTodo, onAddTodo }) {
                 cursor: 'pointer',
                 fontFamily: 'inherit',
                 display: 'flex',
-                flexDirection: 'column'
+                alignItems: 'center',
+                justifyContent: 'space-between'
               }}
             >
-              <span style={{ fontWeight: 'bold' }}>{todo.text}</span>
-              <span style={{ fontSize: '0.7em', color: '#666' }}>
-                {totalCount > 0 ? `(${completedCount}/${totalCount} steps)` : 'No steps'}
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
+                {todo.image && (
+                  <img 
+                    src={todo.image} 
+                    alt="thumb" 
+                    className="sidebar-thumbnail"
+                    onMouseEnter={() => setHoveredImage(todo.image)}
+                    onMouseLeave={() => setHoveredImage(null)}
+                  />
+                )}
+                <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <div style={{ fontWeight: 'bold' }}>{todo.text}</div>
+                  <div style={{ fontSize: '0.7em', color: '#666' }}>
+                    {totalCount > 0 ? `(${completedCount}/${totalCount} steps)` : 'No steps'}
+                  </div>
+                </div>
+              </div>
             </button>
           );
         })}
       </div>
+
+      {hoveredImage && (
+        <div className="thumbnail-preview-container">
+          <img src={hoveredImage} alt="Preview" />
+        </div>
+      )}
     </div>
   );
 }

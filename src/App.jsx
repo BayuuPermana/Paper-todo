@@ -135,10 +135,10 @@ function App() {
     setTodos(items);
   };
 
-  const addTodo = (text) => {
+  const addTodo = (text, image = null) => {
     saveHistory();
     const newId = uuidv4();
-    const newTodo = { id: newId, text, completed: false, subTasks: [] };
+    const newTodo = { id: newId, text, completed: false, subTasks: [], image };
     setTodos([...todos, newTodo]);
     setSelectedTodoId(newId);
     audio.playPencil();

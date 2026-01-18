@@ -333,6 +333,85 @@ body {
       }
     }
 
+    /* Taped Image Aesthetic */
+    .taped-image-container {
+      position: relative;
+      margin: 10px auto 30px auto;
+      padding: 15px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+      width: fit-content;
+      max-width: 100%;
+      transform: rotate(-1deg);
+    }
+
+    .taped-image {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid #eee;
+    }
+
+    .tape-top-left {
+      position: absolute;
+      top: -10px;
+      left: -20px;
+      width: 60px;
+      height: 25px;
+      background-color: rgba(255, 255, 200, 0.6);
+      transform: rotate(-35deg);
+      box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+
+    .tape-bottom-right {
+      position: absolute;
+      bottom: -10px;
+      right: -20px;
+      width: 60px;
+      height: 25px;
+      background-color: rgba(255, 255, 200, 0.6);
+      transform: rotate(-30deg);
+      box-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+
+    .sidebar-thumbnail {
+      width: 24px;
+      height: 24px;
+      object-fit: cover;
+      border: 1px solid black;
+      border-radius: 3px;
+      margin-right: 8px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .sidebar-thumbnail:hover {
+      transform: scale(1.2);
+    }
+
+    .thumbnail-preview-container {
+      position: absolute;
+      left: 100%;
+      top: 0;
+      z-index: 100;
+      padding: 10px;
+      background: white;
+      border: 2px solid black;
+      box-shadow: 5px 5px 0px black;
+      margin-left: 15px;
+      pointer-events: none;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .thumbnail-preview-container img {
+      width: 150px;
+      height: auto;
+      display: block;
+    }
+
     .add-todo-form {
       display: flex;
       margin-bottom: 30px;
