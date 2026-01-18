@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { audio } from './utils/GodAudio';
 
-function PomodoroTimer({ activeSubTaskName, onTaskComplete }) {
+function PomodoroTimer({ activeSubTaskName, onTaskComplete, variant = 'full' }) {
   const PRESETS = [15, 25, 45, 60];
   const [selectedPreset, setSelectedPreset] = useState(25);
   const [timeLeft, setTimeLeft] = useState(25 * 60);
@@ -64,6 +64,54 @@ function PomodoroTimer({ activeSubTaskName, onTaskComplete }) {
     const secs = absSeconds % 60;
     return `${isNegative ? '-' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
+
+  if (variant === 'header') {
+    return (
+      <div className="pomodoro-header-variant" style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: '10px',
+        padding: '5px 10px',
+        borderRadius: '5px',
+        border: '1px solid black',
+        backgroundColor: isBurnedOut ? '#ffcdd2' : '#fff'
+      }}>
+        <div style={{ 
+          fontSize: '1.2em', 
+          fontWeight: 'bold', 
+          fontFamily: 'monospace',
+          color: timeLeft < 0 ? '#2e7d32' : '#333'
+        }}>
+          {formatTime(timeLeft)}
+        </div>
+        <button 
+          onClick={toggleTimer}
+          disabled={isBurnedOut}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: isBurnedOut ? 'not-allowed' : 'pointer',
+            fontSize: '1em',
+            padding: 0
+          }}
+        >
+          {isActive ? '⏸️' : '▶️'}
+        </button>
+        <button 
+          onClick={resetTimer}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '1em',
+            padding: 0
+          }}
+        >
+          ↺
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="pomodoro-timer" style={{

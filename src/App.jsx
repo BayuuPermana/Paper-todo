@@ -334,10 +334,11 @@ function App() {
     <div className="app-layout">
       {/* Mobile Sticky Header */}
       <div className="command-header mobile-only">
-        <div style={{ fontWeight: 'bold', fontSize: '1.1em' }}>{todayStr}</div>
-        <div style={{ transform: 'scale(0.8)', transformOrigin: 'right center' }}>
-          <PomodoroTimer activeSubTaskName={getActiveSubTaskName()} />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <div style={{ fontWeight: 'bold', fontSize: '0.9em', color: '#666' }}>{todayStr}</div>
+          <div style={{ fontSize: '0.7em', color: '#888' }}>🔥 {calculateStreak()} Streak</div>
         </div>
+        <PomodoroTimer variant="header" activeSubTaskName={getActiveSubTaskName()} />
       </div>
 
       <div className={`task-sidebar ${activeTab === 'archive' ? 'mobile-show' : 'mobile-hide'}`}>

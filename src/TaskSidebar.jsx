@@ -31,17 +31,18 @@ function TaskSidebar({ todos, selectedTodoId, onSelectTodo, onAddTodo }) {
               style={{
                 width: '100%',
                 textAlign: 'left',
-                padding: '10px',
-                marginBottom: '10px',
+                padding: '8px 12px',
+                marginBottom: '8px',
                 border: '2px solid black',
                 borderRadius: '5px',
                 backgroundColor: selectedTodoId === todo.id ? '#fff' : '#eee',
-                boxShadow: selectedTodoId === todo.id ? '3px 3px 0px black' : 'none',
+                boxShadow: selectedTodoId === todo.id ? '2px 2px 0px black' : 'none',
                 cursor: 'pointer',
                 fontFamily: 'inherit',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                transition: 'all 0.1s'
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
