@@ -106,6 +106,26 @@ function App() {
     }));
   };
 
+  const editTodo = (id, newText) => {
+    setTodos(todos.map(todo => 
+      todo.id === id ? { ...todo, text: newText } : todo
+    ));
+  };
+
+  const editSubTask = (todoId, subTaskId, newText) => {
+    setTodos(todos.map(todo => {
+      if (todo.id === todoId) {
+        return {
+          ...todo,
+          subTasks: todo.subTasks.map(st => 
+            st.id === subTaskId ? { ...st, text: newText } : st
+          )
+        };
+      }
+      return todo;
+    }));
+  };
+
   const startFocus = (todoId, subTaskId) => {
     setActiveSubTask({ todoId, subTaskId });
   };
@@ -131,6 +151,8 @@ function App() {
             onDeleteSubTask={deleteSubTask}
             onSubTaskFocus={startFocus}
             activeSubTaskId={activeSubTask?.subTaskId}
+            onEditTodo={editTodo}
+            onEditSubTask={editSubTask}
           />
         </DragDropContext>
       </div>

@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import trashIcon from './assets/trash-bin-icon.png';
 import SubTaskItem from './SubTaskItem';
 
-function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskToggle, onSubTaskDelete, onSubTaskFocus, activeSubTaskId }) {
+function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskToggle, onSubTaskDelete, onSubTaskFocus, activeSubTaskId, onEdit, onSubTaskEdit }) {
   const [isAddingSubTask, setIsAddingSubTask] = useState(false);
   const [subTaskText, setSubTaskText] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [editText, setEditText] = useState(todo.text);
 
   const handleAddSubTask = (e) => {
     e.preventDefault();
@@ -14,28 +16,65 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
     setIsAddingSubTask(false);
   };
 
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+    if (editText.trim() && editText !== todo.text) {
+      onEdit(editText.trim());
+    }
+    setIsEditing(false);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      setEditText(todo.text);
+      setIsEditing(false);
+    }
+  };
+
   const completedSubTasks = todo.subTasks ? todo.subTasks.filter(st => st.completed).length : 0;
   const totalSubTasks = todo.subTasks ? todo.subTasks.length : 0;
 
   return (
     <div className={`todo-container ${todo.completed ? 'completed' : ''}`}>
       <div className="todo-item">
-        <button
-          type="button"
-          className={`todo-text ${todo.completed ? 'completed' : ''}`}
-          onClick={() => onToggleComplete(todo.id)}
-          aria-label={`Mark "${todo.text}" as ${
-            todo.completed ? 'incomplete' : 'complete'
-          }`}
-        >
-          {todo.text}
-          {totalSubTasks > 0 && (
-            <span className="progress-indicator" style={{ fontSize: '0.7em', marginLeft: '10px', color: '#888' }}>
-              ({completedSubTasks}/{totalSubTasks} steps)
-            </span>
-          )}
-        </button>
+        {isEditing ? (
+          <form onSubmit={handleEditSubmit} style={{ flexGrow: 1 }}>
+            <input
+              type="text"
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              onBlur={handleEditSubmit}
+              onKeyDown={handleKeyDown}
+              autoFocus
+              className="todo-text"
+              style={{ borderBottom: '1px dashed black' }}
+            />
+          </form>
+        ) : (
+          <button
+            type="button"
+            className={`todo-text ${todo.completed ? 'completed' : ''}`}
+            onClick={() => onToggleComplete(todo.id)}
+            aria-label={`Mark "${todo.text}" as ${
+              todo.completed ? 'incomplete' : 'complete'
+            }`}
+          >
+            {todo.text}
+            {totalSubTasks > 0 && (
+              <span className="progress-indicator" style={{ fontSize: '0.7em', marginLeft: '10px', color: '#888' }}>
+                ({completedSubTasks}/{totalSubTasks} steps)
+              </span>
+            )}
+          </button>
+        )}
         <div className="todo-actions">
+          <button
+            onClick={() => setIsEditing(true)}
+            title="Edit task"
+            style={{ background: 'none', border: 'none', cursor: 'pointer', opacity: 0.6 }}
+          >
+            ✏️
+          </button>
           <button
             className="delete-icon"
             onClick={() => onDelete(todo.id)}
@@ -56,6 +95,7 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
               onDelete={onSubTaskDelete}
               onFocus={onSubTaskFocus}
               isFocused={activeSubTaskId === subTask.id}
+              onEdit={(newText) => onSubTaskEdit(subTask.id, newText)}
             />
           ))}
           
