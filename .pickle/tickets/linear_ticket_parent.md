@@ -1,6 +1,6 @@
 ---
-id: mobile-hub-epic
-title: [Epic] Mobile Neural Hub Protocol
+id: bifurcation-epic
+title: [Epic] Visual Bifurcation Protocol (UI Separation)
 status: Backlog
 priority: High
 project: project
@@ -9,14 +9,14 @@ updated: 2026-01-18
 links:
   - url: ../../prd.md
     title: PRD
-labels: [core, ui, mobile]
+labels: [core, layout, architecture]
 assignee: Pickle Rick
 ---
 
 # Description
 
 ## Problem to solve
-The current mobile layout is a vertical stack that requires excessive scrolling and hides tools.
+The application uses a single component tree for both Mobile and Desktop, leading to cluttered code and sub-optimal UX on both platforms.
 
 ## Solution
-Implement a tabbed mobile navigation system with a persistent utility header for tools and a cleaner, focused workspace.
+Architect separate rendering paths for Mobile and Desktop. Implement a real-time viewport observer to hot-swap the layout structures while maintaining unified state.

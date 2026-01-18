@@ -1,56 +1,57 @@
-# Mobile Neural Hub Protocol PRD
+# Visual Bifurcation Protocol PRD
 
 ## HR Eng
 
-| Mobile Neural Hub PRD |  | Summary: Refactoring the mobile experience to use a tabbed architecture, a sticky utility header (Timer + Date), and an uncluttered 'Focus-First' layout. |
+| Visual Bifurcation PRD |  | Summary: Decoupling the Desktop and Mobile UI architectures into distinct rendering paths while maintaining a unified state layer. Includes hot-swapping logic for real-time viewport adaptation. |
 | :---- | :---- | :---- |
 | **Author**: Pickle Rick **Contributors**: Morty **Intended audience**: Engineering | **Status**: Draft **Created**: 2026-01-18 | **Visibility**: Public |
 
 ## Introduction
-The current 3-pane stack on mobile is a "Jerry-level" mess. It creates infinite scrolling and cognitive load. This protocol introduces a tab-based mobile navigation system with a persistent utility header to ensure focus and ease of use on small viewports.
+The current application uses 'Responsive CSS' to force a desktop layout into a mobile viewport. This is 'Jerry-level' engineering. This protocol mandates a strict bifurcation: Desktop and Mobile will have dedicated component trees optimized for their respective form factors, hot-swapping dynamically based on window dimensions.
 
 ## Problem Statement
-**Current Process**: All segments (Sidebar, Workspace, Tools) stack vertically, requiring excessive scrolling.
-**Primary Users**: Mobile power-users who need to manage tasks on the go.
-**Pain Points**: Vertical clutter. Tools disappearing on scroll. Hard to reach 'New Task' input.
-**Importance**: Visual clarity is essential for focus in a mobile environment.
+**Current Process**: Single component tree using media queries to hide/show elements.
+**Primary Users**: Power users who switch devices or resize windows.
+**Pain Points**: Cluttered mobile view due to shared component bloat. Inefficient rendering of hidden desktop elements on mobile.
+**Importance**: Form factor optimization is critical for cognitive load reduction.
 
 ## Objective & Scope
-**Objective**: Implement a tabbed navigation system and a sticky utility header for mobile viewports.
-**Ideal Outcome**: A clean, single-pane mobile experience where tools are always accessible at the top and navigation happens via a bottom tab bar.
+**Objective**: Architect a dynamic UI switcher that renders specialized layouts for Desktop and Mobile.
+**Ideal Outcome**: Zero visual 'leakage' between platforms. Mobile-specific tools and Desktop-specific dashboards living in separate code paths.
 
 ### In-scope or Goals
-- **Mobile Tab State**: Implement `activeTab` state in `App.jsx`.
-- **Sticky Utility Header**: A top-fixed bar containing the Pomodoro Timer and current Date/Mini-Calendar.
-- **Matrix Tab Bar**: A bottom-fixed bar to toggle between 'Archive' (Projects) and 'Workspace' (Steps).
-- **Responsive Visibility**: Only show the relevant pane for the active tab on mobile (< 1024px).
-- **Header Add-Bar**: Place the `AddTodo` input prominently at the top of the 'Archive' tab.
+- **Viewport Observer**: Custom hook to track `isMobile` state via window resize listeners.
+- **Dedicated Layouts**: Create `DesktopLayout` and `MobileLayout` components.
+- **Component Specialization**: Build mobile-optimized versions of the Timer and Calendar.
+- **Hot-Swapping**: Instant UI transition without state loss on resize.
 
 ### Not-in-scope or Non-Goals
-- Multi-pane display on mobile.
-- Changing desktop grid behavior.
+- Separating the logic/state (they remain unified in `App.jsx`).
+- Supporting tablet-specific layouts (grouped with mobile).
 
 ## Product Requirements
 
 ### Critical User Journeys (CUJs)
-1. **The Instant Objective**: User opens the app on mobile. They immediately see today's date and the timer at the top. They type a new goal into the bar and hit '»'. 
-2. **The Smooth Pivot**: User is working on steps in the 'Workspace'. They need to switch projects, so they tap the 'Archive' tab at the bottom, pick a new project, and are automatically taken back to the 'Workspace'.
+1. **The Desktop Power-User**: Opens the app on a 4K monitor. Sees the Archive Rack, Workspace, and full Tools suite in a glorious 3-pane grid.
+2. **The Mobile Specialist**: Opens on a phone. Sees the Sticky Command Header and Bottom Matrix Tab Bar.
+3. **The Window Warper**: User shrinks their browser window from 1300px to 1100px. The UI instantly transforms from Desktop grid to Mobile Neural Hub.
 
 ### Functional Requirements
 
 | Priority | Requirement | User Story |
 | :---- | :---- | :---- |
-| P0 | Mobile Tab Navigation | As a user, I want to switch views without scrolling for miles. |
-| P0 | Sticky Utility Header | As a user, I want to see my timer and the date at all times. |
-| P1 | Date-only Mini Calendar | As a user, I want a compact date display to save space. |
-| P1 | Responsive Stacking Refactor | As a developer, I want to hide inactive segments on mobile. |
+| P0 | Dynamic Viewport State | As a system, I want to know exactly when the screen crosses the 1200px line. |
+| P0 | Layout Decoupling | As a developer, I want separate files for Mobile and Desktop layouts. |
+| P1 | Mobile-First Components | As a mobile user, I want tools that don't look like shrunken desktop widgets. |
+| P1 | Hot-Swap Integrity | As a user, I want the UI to change without my current task selection or timer resetting. |
 
 ## Assumptions
-- Breakpoint remains 1024px or 1200px as per current CSS.
-- The "Paper" aesthetic must persist in the new mobile-only elements.
+- Breakpoint is fixed at 1200px.
+- The 'Paper' aesthetic remains the unified design language.
 
 ## Risks & Mitigations
-- **Risk**: Overlapping fixed elements. -> **Mitigation**: Use careful z-indexing and viewport-based padding.
+- **Risk**: Performance lag on rapid resize. -> **Mitigation**: Debounce the resize listener.
+- **Risk**: Event listener leaks. -> **Mitigation**: Clean up listeners in `useEffect`.
 
 ## Tradeoff
-- **Density vs. Context**: We trade seeing everything at once for seeing one thing perfectly.
+- **Maintainability vs. UX**: We trade having one UI to maintain for having two, in exchange for a vastly superior user experience.
