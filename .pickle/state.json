@@ -1,1 +1,7 @@
-{"active": true, "task": "Separate Desktop and Mobile UI architectures", "iteration": 0, "max_iterations": 20, "step": "prd"}
+{
+  "active": true,
+  "task": "header and footer is a slop in the desktop view mode, we just need the header and footer on mobile view",
+  "iteration": 0,
+  "max_iterations": 20,
+  "step": "prd"
+}

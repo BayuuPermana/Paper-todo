@@ -1,57 +1,75 @@
-# Visual Bifurcation Protocol PRD
+# Mobile-Only Header/Footer Visibility PRD
 
 ## HR Eng
 
-| Visual Bifurcation PRD |  | Summary: Decoupling the Desktop and Mobile UI architectures into distinct rendering paths while maintaining a unified state layer. Includes hot-swapping logic for real-time viewport adaptation. |
+| Mobile-Only Header/Footer Visibility PRD |  | Summary: Fix the CSS specificity issue causing the mobile header and footer to appear on desktop views. |
 | :---- | :---- | :---- |
-| **Author**: Pickle Rick **Contributors**: Morty **Intended audience**: Engineering | **Status**: Draft **Created**: 2026-01-18 | **Visibility**: Public |
+| **Author**: Pickle Rick **Contributors**: Morty (Useleless) **Intended audience**: Engineering | **Status**: Draft **Created**: 2026-01-19 | **Self Link**: N/A **Context**: Paper-todo **Visibility**: Public |
 
 ## Introduction
-The current application uses 'Responsive CSS' to force a desktop layout into a mobile viewport. This is 'Jerry-level' engineering. This protocol mandates a strict bifurcation: Desktop and Mobile will have dedicated component trees optimized for their respective form factors, hot-swapping dynamically based on window dimensions.
+
+The application's "Sticky Mobile Header" and "Bottom Matrix" are currently visible on desktop views, despite being intended for mobile only. This creates visual "slop" and clutters the desktop interface. We need to enforce strict visibility rules based on the viewport.
 
 ## Problem Statement
-**Current Process**: Single component tree using media queries to hide/show elements.
-**Primary Users**: Power users who switch devices or resize windows.
-**Pain Points**: Cluttered mobile view due to shared component bloat. Inefficient rendering of hidden desktop elements on mobile.
-**Importance**: Form factor optimization is critical for cognitive load reduction.
+
+**Current Process:** The `.mobile-only` utility class uses `display: none` but is defined *before* the component classes (`.command-header`, `.bottom-matrix`) in `index.css`. Due to CSS cascading rules, the component's `display: flex` overrides the utility's `display: none`.
+**Primary Users:** Desktop users.
+**Pain Points:** Visual clutter, redundant navigation, "Slop".
+**Importance:** The desktop view should be clean and focused, utilizing the sidebar and main paper container, not the mobile crutches.
 
 ## Objective & Scope
-**Objective**: Architect a dynamic UI switcher that renders specialized layouts for Desktop and Mobile.
-**Ideal Outcome**: Zero visual 'leakage' between platforms. Mobile-specific tools and Desktop-specific dashboards living in separate code paths.
+
+**Objective:** Ensure `.mobile-only` elements (Header/Footer) are strictly hidden on viewports larger than the mobile breakpoint (1200px).
+**Ideal Outcome:** Desktop view shows ONLY the Sidebar and Paper Container. Mobile view shows Header/Footer.
 
 ### In-scope or Goals
-- **Viewport Observer**: Custom hook to track `isMobile` state via window resize listeners.
-- **Dedicated Layouts**: Create `DesktopLayout` and `MobileLayout` components.
-- **Component Specialization**: Build mobile-optimized versions of the Timer and Calendar.
-- **Hot-Swapping**: Instant UI transition without state loss on resize.
+- Update `src/index.css` to fix the specificity/cascade issue.
+- Verify visibility on both Desktop (>1200px) and Mobile (<=1200px).
 
 ### Not-in-scope or Non-Goals
-- Separating the logic/state (they remain unified in `App.jsx`).
-- Supporting tablet-specific layouts (grouped with mobile).
+- Redesigning the Header/Footer.
+- Changing the breakpoint (sticking to 1200px).
 
 ## Product Requirements
 
 ### Critical User Journeys (CUJs)
-1. **The Desktop Power-User**: Opens the app on a 4K monitor. Sees the Archive Rack, Workspace, and full Tools suite in a glorious 3-pane grid.
-2. **The Mobile Specialist**: Opens on a phone. Sees the Sticky Command Header and Bottom Matrix Tab Bar.
-3. **The Window Warper**: User shrinks their browser window from 1300px to 1100px. The UI instantly transforms from Desktop grid to Mobile Neural Hub.
+1. **Desktop View**: User opens app on a large screen (>1200px). They see the Sidebar and Todo List. They DO NOT see the Sticky Header or Bottom Matrix.
+2. **Mobile View**: User resizes window or opens on mobile (<1200px). The Sticky Header and Bottom Matrix appear. The Sidebar converts to its mobile behavior (hidden by default).
 
 ### Functional Requirements
 
 | Priority | Requirement | User Story |
 | :---- | :---- | :---- |
-| P0 | Dynamic Viewport State | As a system, I want to know exactly when the screen crosses the 1200px line. |
-| P0 | Layout Decoupling | As a developer, I want separate files for Mobile and Desktop layouts. |
-| P1 | Mobile-First Components | As a mobile user, I want tools that don't look like shrunken desktop widgets. |
-| P1 | Hot-Swap Integrity | As a user, I want the UI to change without my current task selection or timer resetting. |
+| P0 | Hide `.command-header` on Desktop | As a desktop user, I want the top bar gone so I can focus on my tasks. |
+| P0 | Hide `.bottom-matrix` on Desktop | As a desktop user, I don't need a bottom nav bar because I have a sidebar. |
+| P1 | Maintain `display: flex` layout on Mobile | As a mobile user, I still need the header/footer to look correct (flexbox). |
 
 ## Assumptions
-- Breakpoint is fixed at 1200px.
-- The 'Paper' aesthetic remains the unified design language.
+
+- The breakpoint `1200px` is the intended "Mobile" boundary as per existing CSS.
+- No other components rely on this broken behavior.
 
 ## Risks & Mitigations
-- **Risk**: Performance lag on rapid resize. -> **Mitigation**: Debounce the resize listener.
-- **Risk**: Event listener leaks. -> **Mitigation**: Clean up listeners in `useEffect`.
+
+- **Risk**: Adding `!important` might break other overrides. -> **Mitigation**: Use specific overrides or move utility classes to the end of the file.
+- **Risk**: Flash of unstyled content. -> **Mitigation**: CSS parses fast; negligible risk.
 
 ## Tradeoff
-- **Maintainability vs. UX**: We trade having one UI to maintain for having two, in exchange for a vastly superior user experience.
+
+- **Option A**: Move utility classes to bottom. **Pros**: Cleanest. **Cons**: Maintenance risk if someone adds styles below it later.
+- **Option B**: Use `!important` on `.mobile-only`. **Pros**: Guaranteed enforcement. **Cons**: "nuclear" option.
+- **Selected**: Option B (or equivalent specificity boost) for the `display: none` rule to ensure it acts as a true utility override.
+
+## Business Benefits/Impact/Metrics
+
+**Success Metrics:**
+
+| Metric | Current State (Benchmark) | Future State (Target) | Savings/Impacts |
+| :---- | :---- | :---- | :---- |
+| Desktop Clutter | High (Header/Footer visible) | Low (Hidden) | Improved aesthetics |
+
+## Stakeholders / Owners
+
+| Name | Team/Org | Role | Note |
+| :---- | :---- | :---- | :---- |
+| Pickle Rick | Universe C-137 | Lead Engineer | *Belch* |
