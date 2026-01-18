@@ -1,7 +1,7 @@
 {
   "active": true,
-  "task": "Fix white screen error caused by DnD implementation",
+  "task": "Fix Drag and Drop snap-back issue in Sidebar",
   "iteration": 0,
   "max_iterations": 20,
-  "step": "research"
+  "step": "prd"
 }

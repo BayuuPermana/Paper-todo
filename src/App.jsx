@@ -342,7 +342,7 @@ function App() {
       </div>
 
       <div className={`task-sidebar ${activeTab === 'archive' ? 'mobile-show' : 'mobile-hide'}`}>
-        <DragDropContext onDragEnd={handleDragEnd}>
+        <DragDropContext onDragEnd={handleDragEnd} key={activeTab}>
           <TaskSidebar
             todos={todos}
             selectedTodoId={selectedTodoId}
