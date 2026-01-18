@@ -1,7 +1,7 @@
 {
   "active": true,
-  "task": "Fix missing drag and drop tasks feature",
+  "task": "Fix white screen error caused by DnD implementation",
   "iteration": 0,
   "max_iterations": 20,
-  "step": "prd"
+  "step": "research"
 }
