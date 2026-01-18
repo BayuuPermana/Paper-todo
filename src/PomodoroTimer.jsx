@@ -105,13 +105,22 @@ function PomodoroTimer({ activeSubTaskName, onTaskComplete }) {
           </div>
 
           <div style={{ marginBottom: '10px' }}>
-            <label style={{ fontSize: '0.8em', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
+            <label style={{ 
+              fontSize: '0.8em', 
+              cursor: 'pointer', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              gap: '8px',
+              userSelect: 'none'
+            }}>
               <input 
                 type="checkbox" 
+                className="custom-checkbox"
                 checked={isFlowMode} 
                 onChange={() => setIsFlowMode(!isFlowMode)}
               />
-              Flow Mode (Auto-Continue)
+              <span style={{ fontWeight: 'bold' }}>Flow Mode (Auto-Continue)</span>
             </label>
           </div>
         </>
