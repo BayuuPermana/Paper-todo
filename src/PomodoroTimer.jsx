@@ -85,19 +85,12 @@ function PomodoroTimer({ activeSubTaskName, onTaskComplete }) {
         </div>
       ) : (
         <>
-          <div style={{ display: 'flex', gap: '5px', justifyContent: 'center', marginBottom: '15px' }}>
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginBottom: '20px' }}>
             {PRESETS.map(p => (
               <button 
                 key={p}
                 onClick={() => setSelectedPreset(p)}
-                style={{
-                  padding: '2px 8px',
-                  border: '1px solid black',
-                  backgroundColor: selectedPreset === p ? '#eee' : '#fff',
-                  cursor: 'pointer',
-                  fontSize: '0.8em',
-                  boxShadow: selectedPreset === p ? 'inset 1px 1px 2px rgba(0,0,0,0.2)' : '1px 1px 0px black'
-                }}
+                className={`preset-btn ${selectedPreset === p ? 'active' : ''}`}
               >
                 {p}m
               </button>

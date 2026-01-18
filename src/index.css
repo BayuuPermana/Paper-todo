@@ -447,3 +447,38 @@ body {
     .custom-checkbox:hover {
       box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
     }
+
+    /* Preset Selection Buttons */
+    .preset-btn {
+      padding: 10px 15px;
+      border: 2px solid black;
+      border-radius: 5px;
+      background-color: #fff;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: bold;
+      font-size: 1em;
+      transition: all 0.1s;
+      box-shadow: 3px 3px 0px black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 60px;
+    }
+
+    .preset-btn:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0px black;
+      background-color: #fdfdfd;
+    }
+
+    .preset-btn:active {
+      transform: translate(2px, 2px);
+      box-shadow: 1px 1px 0px black;
+    }
+
+    .preset-btn.active {
+      background-color: #fff9c4; /* Highlight color */
+      transform: translate(1px, 1px);
+      box-shadow: 2px 2px 0px black;
+    }
