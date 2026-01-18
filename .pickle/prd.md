@@ -1,69 +1,56 @@
-# Project: Dual-Pane Desk PRD
+# Sentient Workspace Protocol PRD
 
 ## HR Eng
 
-| Dual-Pane Desk PRD |  | Summary: Splitting the UI into a 2/3 task list (left) and 1/3 productivity suite (right) containing a subtask-linked Pomodoro timer and a visual paper calendar. |
+| Sentient Workspace PRD |  | Summary: Upgrading the 'Paper-todo' app with math-synthesized audio feedback, a temporal undo buffer, and high-performance keyboard navigation to create a tactile, immersive engineering environment. |
 | :---- | :---- | :---- |
-| **Author**: Pickle Rick **Contributors**: Morty **Intended audience**: Engineering | **Status**: Draft **Created**: 2026-01-18 | **Visibility**: Need to know |
+| **Author**: Pickle Rick **Contributors**: Morty **Intended audience**: Engineering | **Status**: Draft **Created**: 2026-01-18 | **Visibility**: Public |
 
 ## Introduction
-
-The "Paper-todo" application is evolving from a simple list into a tactile workspace. This feature introduces a dual-pane layout that combines task management with focused time-tracking and a high-level temporal overview.
+The current application is a silent, static tool. This protocol introduces 'God Mode' enhancements that turn the UI into a responsive, sentient workspace. We will use the Web Audio API to synthesize tactile sounds and CSS transforms to create physical presence.
 
 ## Problem Statement
-
-**Current Process:** Users only have a list of tasks. There is no integrated way to track focus time or visualize the current date within the "Paper" aesthetic.
-**Primary Users:** Procrastinators who need "God-tier" focus tools.
-**Pain Points:** Disconnection between task lists and productivity timers.
-**Importance:** To create a "desk-like" experience where all tools are physically present on the digital paper.
+**Current Process**: The app is silent and relies on mouse interaction. Mistakes are permanent until manually recreated.
+**Primary Users**: Power users and geniuses who want to move at the speed of thought.
+**Pain Points**: Lack of tactile feedback. Permanent data loss on accidental delete. Friction in navigation.
+**Importance**: A professional workspace must provide sensory confirmation and temporal safety.
 
 ## Objective & Scope
-
-**Objective:** Implement a split-screen dashboard (2/3 tasks, 1/3 tools) with a custom-built Pomodoro timer and Calendar.
-**Ideal Outcome:** Users can select a subtask, trigger a dedicated Pomodoro session, and see the timer automatically stop upon subtask completion.
+**Objective**: Implement sensory feedback, keyboard-first navigation, and basic state recovery.
+**Ideal Outcome**: The user can navigate, edit, and recover state using only their keyboard while receiving synthesized acoustic confirmation of every action.
 
 ### In-scope or Goals
-- Dual-pane responsive layout (Grid or Flexbox).
-- Custom Pomodoro Timer component (God Mode).
-- Subtask-Timer linking (State management for active subtask).
-- Custom Paper Calendar component (God Mode).
-- Mobile responsiveness (Stacked layout).
+- **Audio Synthesis**: Custom `GodAudio` module using Web Audio API (Pencil scritch, Paper rustle, Crumple).
+- **Temporal Buffer**: Single-action Undo system (Ctrl+Z).
+- **Neural Shortcuts**: `j/k` navigation, `n` for new task, `Enter` for selection.
+- **Convincing Animation**: CSS-based 'crumple and fade' for deletions.
 
 ### Not-in-scope or Non-Goals
-- External calendar API integrations (Google/Outlook).
-- Advanced Pomodoro settings (custom chime uploads).
+- Multi-level undo history (limited to 1 step per user request).
+- External audio assets.
 
 ## Product Requirements
 
 ### Critical User Journeys (CUJs)
-1. **The Deep Work Session**: User views task list on the left. They click a subtask. The right pane updates with a Pomodoro timer (15-25m). User starts the timer. They finish the work, check the subtask, and the timer stops automatically.
-2. **The Time Traveler**: User glances at the top-right "Small Calendar" to verify the date without leaving the app's tactile environment.
+1. **The Keyboard Speedster**: User hits 'n', types a task, hits Enter. Navigates the rack with 'j' and 'k' while hearing the 'rustle' of papers.
+2. **The Redo-Jerry**: User deletes a task by accident. They see it 'crumple' away. They hit Ctrl+Z, hear a reverse rustle, and it's back.
 
 ### Functional Requirements
 
 | Priority | Requirement | User Story |
 | :---- | :---- | :---- |
-| P0 | 2/3 - 1/3 Split Layout | As a user, I want to see my tasks and my tools side-by-side. |
-| P0 | Subtask-linked Pomodoro | As a user, I want a timer dedicated to my current subtask that stops when I'm done. |
-| P1 | Paper-styled Calendar | As a user, I want to see a calendar that fits the hand-drawn aesthetic. |
-| P1 | Responsive Stacking | As a user on a phone, I want the segments to stack vertically. |
+| P0 | Web Audio Scritch/Rustle | As a user, I want to hear my actions to feel the 'Paper'. |
+| P0 | Undo State (Latest) | As a user, I want to recover my last deleted or edited item. |
+| P1 | j/k Sidebar Navigation | As a user, I want to fly through my rack without a mouse. |
+| P1 | CSS Crumple Effect | As a user, I want to see the physical impact of 'Delete'. |
 
 ## Assumptions
-
-- Subtasks will have a default Pomodoro duration (e.g., 25 mins).
-- The "Paper" aesthetic is mandatory for all new components.
+- Browser supports Web Audio API and modern CSS transitions.
+- The user has speakers (obviously, Morty).
 
 ## Risks & Mitigations
-
-- **Risk**: Complex state management between panes. -> **Mitigation**: Use centralized state in `App.jsx` for the "Active Subtask."
-- **Risk**: Layout breakage on small screens. -> **Mitigation**: Standard media query for `flex-direction: column`.
+- **Risk**: Audio being annoying. -> **Mitigation**: Keep sounds subtle, high-frequency, and short.
+- **Risk**: Event listener collisions. -> **Mitigation**: Global singleton for shortcut management.
 
 ## Tradeoff
-
-- **Option**: Use `react-calendar`. **Cons**: Too "corporate," hard to style like paper. **Decision**: God Mode (Custom implementation) to maintain 100% aesthetic control.
-
-## Business Benefits/Impact/Metrics
-
-**Success Metrics:**
-- Increased "Time Spent in Deep Work" (Calculated by timer usage).
-- User Satisfaction with "Cuteness/Tactility" of the UI.
+- **Synthesis vs Assets**: Synthesis is harder to code but results in zero latency and zero bundle bloat.

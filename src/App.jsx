@@ -6,6 +6,7 @@ import AddTodo from './AddTodo';
 import PomodoroTimer from './PomodoroTimer';
 import PaperCalendar from './PaperCalendar';
 import TaskSidebar from './TaskSidebar';
+import { audio } from './utils/GodAudio';
 
 const STORAGE_KEY = 'paper-todos';
 
@@ -25,6 +26,7 @@ function App() {
   });
 
   const [activeSubTask, setActiveSubTask] = useState(null);
+  const [undoBuffer, setUndoBuffer] = useState(null);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
@@ -50,9 +52,64 @@ function App() {
     }
   }, [todos, selectedTodoId]);
 
+  // Neural Shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Don't trigger shortcuts if user is typing in an input
+      if (e.target.tagName === 'INPUT') {
+        if (e.key === 'Escape') e.target.blur();
+        return;
+      }
+
+      // Undo: Ctrl+Z
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+        e.preventDefault();
+        handleUndo();
+        return;
+      }
+
+      // New Task: n
+      if (e.key === 'n') {
+        e.preventDefault();
+        const input = document.querySelector('.add-todo-form input');
+        if (input) input.focus();
+        return;
+      }
+
+      // Navigation: j/k
+      if (e.key === 'j' || e.key === 'k') {
+        e.preventDefault();
+        const currentIndex = todos.findIndex(t => t.id === selectedTodoId);
+        let nextIndex = currentIndex;
+        if (e.key === 'j') nextIndex = Math.min(todos.length - 1, currentIndex + 1);
+        if (e.key === 'k') nextIndex = Math.max(0, currentIndex - 1);
+        
+        if (nextIndex !== currentIndex && todos[nextIndex]) {
+          setSelectedTodoId(todos[nextIndex].id);
+          audio.playRustle();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [todos, selectedTodoId, undoBuffer]);
+
+  const saveHistory = () => {
+    setUndoBuffer(JSON.parse(JSON.stringify(todos)));
+  };
+
+  const handleUndo = () => {
+    if (undoBuffer) {
+      setTodos(undoBuffer);
+      setUndoBuffer(null);
+      audio.playRustle();
+    }
+  };
+
   const handleDragEnd = (result) => {
     if (!result.destination) return;
-
+    saveHistory();
     const items = Array.from(todos);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
@@ -61,32 +118,43 @@ function App() {
   };
 
   const addTodo = (text) => {
+    saveHistory();
     const newId = uuidv4();
     const newTodo = { id: newId, text, completed: false, subTasks: [] };
     setTodos([...todos, newTodo]);
     setSelectedTodoId(newId);
+    audio.playPencil();
   };
 
   const toggleComplete = (id) => {
+    saveHistory();
     setTodos(
       todos.map((todo) =>
         todo.id === id ? { ...todo, completed: !todo.completed } : todo
       )
     );
+    audio.playPencil();
   };
 
   const deleteTodo = (id) => {
-    if (activeSubTask && todos.find(t => t.id === id)?.subTasks.some(st => st.id === activeSubTask.subTaskId)) {
-      setActiveSubTask(null);
-    }
-    const newTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(newTodos);
-    if (id === selectedTodoId) {
-      setSelectedTodoId(newTodos.length > 0 ? newTodos[0].id : null);
-    }
+    saveHistory();
+    audio.playCrumple();
+    
+    // Physical delay for animation
+    setTimeout(() => {
+      if (activeSubTask && todos.find(t => t.id === id)?.subTasks.some(st => st.id === activeSubTask.subTaskId)) {
+        setActiveSubTask(null);
+      }
+      const newTodos = todos.filter((todo) => todo.id !== id);
+      setTodos(newTodos);
+      if (id === selectedTodoId) {
+        setSelectedTodoId(newTodos.length > 0 ? newTodos[0].id : null);
+      }
+    }, 400);
   };
 
   const addSubTask = (todoId, text) => {
+    saveHistory();
     setTodos(todos.map(todo => {
       if (todo.id === todoId) {
         return {
@@ -99,9 +167,11 @@ function App() {
       }
       return todo;
     }));
+    audio.playPencil();
   };
 
   const toggleSubTask = (todoId, subTaskId) => {
+    saveHistory();
     setTodos(todos.map(todo => {
       if (todo.id === todoId) {
         return {
@@ -120,9 +190,12 @@ function App() {
       }
       return todo;
     }));
+    audio.playPencil();
   };
 
   const deleteSubTask = (todoId, subTaskId) => {
+    saveHistory();
+    audio.playCrumple();
     if (activeSubTask?.subTaskId === subTaskId) {
       setActiveSubTask(null);
     }
@@ -138,12 +211,15 @@ function App() {
   };
 
   const editTodo = (id, newText) => {
+    saveHistory();
     setTodos(todos.map(todo => 
       todo.id === id ? { ...todo, text: newText } : todo
     ));
+    audio.playPencil();
   };
 
   const editSubTask = (todoId, subTaskId, newText) => {
+    saveHistory();
     setTodos(todos.map(todo => {
       if (todo.id === todoId) {
         return {
@@ -155,10 +231,12 @@ function App() {
       }
       return todo;
     }));
+    audio.playPencil();
   };
 
   const startFocus = (todoId, subTaskId) => {
     setActiveSubTask({ todoId, subTaskId });
+    audio.playRustle();
   };
 
   const getActiveSubTaskName = () => {

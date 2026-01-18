@@ -1,6 +1,6 @@
 ---
-id: rack-refactor-epic
-title: [Epic] Archive Rack Protocol (Layout Refactor)
+id: sentient-epic
+title: [Epic] Sentient Workspace Protocol
 status: Backlog
 priority: High
 project: project
@@ -9,14 +9,14 @@ updated: 2026-01-18
 links:
   - url: ../../prd.md
     title: PRD
-labels: [core, layout, architecture]
+labels: [core, audio, ux]
 assignee: Pickle Rick
 ---
 
 # Description
 
 ## Problem to solve
-The application conflates high-level project management with low-level step execution, leading to visual clutter and reduced focus.
+The application lacks physical presence and responsiveness. High-level focus requires sensory feedback and keyboard efficiency.
 
 ## Solution
-Separating the concerns into a 'Sidebar' for tasks and a 'Workspace' for subtasks of the active project.
+Implement a 'Sentient Workspace' with synthesized audio, temporal safety (undo), and keyboard-first navigation.
