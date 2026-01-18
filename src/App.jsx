@@ -357,14 +357,15 @@ function App() {
           <PomodoroTimer variant="header" activeSubTaskName={getActiveSubTaskName()} />
         </div>
 
-        <div className={`task-sidebar ${activeTab === 'archive' ? 'mobile-show' : 'mobile-hide'}`}>
+        <DragDropContext onDragEnd={handleDragEnd} key={activeTab}>
           <TaskSidebar
             todos={todos}
             selectedTodoId={selectedTodoId}
             onSelectTodo={setSelectedTodoId}
             onAddTodo={addTodo}
+            className={activeTab === 'archive' ? 'mobile-show' : 'mobile-hide'}
           />
-        </div>
+        </DragDropContext>
 
         <div className={`paper-container ${activeTab === 'focus' ? 'mobile-show' : 'mobile-hide'}`}>
           <div className="left-segment">

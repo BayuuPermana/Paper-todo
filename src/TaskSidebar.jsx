@@ -3,11 +3,11 @@ import { Draggable } from 'react-beautiful-dnd';
 import { StrictModeDroppable } from './StrictModeDroppable';
 import AddTodo from './AddTodo';
 
-function TaskSidebar({ todos, selectedTodoId, onSelectTodo, onAddTodo }) {
+function TaskSidebar({ todos, selectedTodoId, onSelectTodo, onAddTodo, className }) {
   const [hoveredImage, setHoveredImage] = useState(null);
 
   return (
-    <div className="task-sidebar" style={{
+    <div className={`task-sidebar ${className || ''}`} style={{
       padding: '20px',
       borderRight: '2px solid black',
       height: '100%',
