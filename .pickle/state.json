@@ -1,6 +1,6 @@
 {
   "active": true,
-  "task": "Polish Mobile UI: Fix Pomodoro Button and Replace Emojis",
+  "task": "Fix missing drag and drop tasks feature",
   "iteration": 0,
   "max_iterations": 20,
   "step": "prd"

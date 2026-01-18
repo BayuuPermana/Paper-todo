@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Draggable } from 'react-beautiful-dnd';
+import { StrictModeDroppable } from './StrictModeDroppable';
 import AddTodo from './AddTodo';
 
 function TaskSidebar({ todos, selectedTodoId, onSelectTodo, onAddTodo }) {
@@ -19,53 +21,76 @@ function TaskSidebar({ todos, selectedTodoId, onSelectTodo, onAddTodo }) {
       
       <AddTodo onAdd={onAddTodo} />
 
-      <div className="sidebar-list" style={{ flexGrow: 1, overflowY: 'auto' }}>
-        {todos.map(todo => {
-          const completedCount = todo.subTasks.filter(st => st.completed).length;
-          const totalCount = todo.subTasks.length;
-          
-          return (
-            <button
-              key={todo.id}
-              onClick={() => onSelectTodo(todo.id)}
-              style={{
-                width: '100%',
-                textAlign: 'left',
-                padding: '8px 12px',
-                marginBottom: '8px',
-                border: '2px solid black',
-                borderRadius: '5px',
-                backgroundColor: selectedTodoId === todo.id ? '#fff' : '#eee',
-                boxShadow: selectedTodoId === todo.id ? '2px 2px 0px black' : 'none',
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                transition: 'all 0.1s'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
-                {todo.image && (
-                  <img 
-                    src={todo.image} 
-                    alt="thumb" 
-                    className="sidebar-thumbnail"
-                    onMouseEnter={() => setHoveredImage(todo.image)}
-                    onMouseLeave={() => setHoveredImage(null)}
-                  />
-                )}
-                <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  <div style={{ fontWeight: 'bold' }}>{todo.text}</div>
-                  <div style={{ fontSize: '0.7em', color: '#666' }}>
-                    {totalCount > 0 ? `(${completedCount}/${totalCount} steps)` : 'No steps'}
-                  </div>
-                </div>
-              </div>
-            </button>
-          );
-        })}
-      </div>
+      <StrictModeDroppable droppableId="sidebar-todos">
+        {(provided) => (
+          <div 
+            className="sidebar-list" 
+            {...provided.droppableProps} 
+            ref={provided.innerRef} 
+            style={{ flexGrow: 1, overflowY: 'auto' }}
+          >
+            {todos.map((todo, index) => {
+              const completedCount = todo.subTasks.filter(st => st.completed).length;
+              const totalCount = todo.subTasks.length;
+              
+              return (
+                <Draggable key={todo.id} draggableId={todo.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={{
+                        ...provided.draggableProps.style,
+                        marginBottom: '8px'
+                      }}
+                    >
+                      <button
+                        onClick={() => onSelectTodo(todo.id)}
+                        style={{
+                          width: '100%',
+                          textAlign: 'left',
+                          padding: '8px 12px',
+                          border: '2px solid black',
+                          borderRadius: '5px',
+                          backgroundColor: selectedTodoId === todo.id ? '#fff' : '#eee',
+                          boxShadow: selectedTodoId === todo.id ? '2px 2px 0px black' : 'none',
+                          cursor: 'grab',
+                          fontFamily: 'inherit',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          transition: 'all 0.1s',
+                          opacity: snapshot.isDragging ? 0.8 : 1
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
+                          {todo.image && (
+                            <img 
+                              src={todo.image} 
+                              alt="thumb" 
+                              className="sidebar-thumbnail"
+                              onMouseEnter={() => setHoveredImage(todo.image)}
+                              onMouseLeave={() => setHoveredImage(null)}
+                            />
+                          )}
+                          <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            <div style={{ fontWeight: 'bold' }}>{todo.text}</div>
+                            <div style={{ fontSize: '0.7em', color: '#666' }}>
+                              {totalCount > 0 ? `(${completedCount}/${totalCount} steps)` : 'No steps'}
+                            </div>
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+                  )}
+                </Draggable>
+              );
+            })}
+            {provided.placeholder}
+          </div>
+        )}
+      </StrictModeDroppable>
 
       {hoveredImage && (
         <div className="thumbnail-preview-container">

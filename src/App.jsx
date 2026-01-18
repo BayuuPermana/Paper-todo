@@ -342,31 +342,31 @@ function App() {
       </div>
 
       <div className={`task-sidebar ${activeTab === 'archive' ? 'mobile-show' : 'mobile-hide'}`}>
-        <TaskSidebar
-          todos={todos}
-          selectedTodoId={selectedTodoId}
-          onSelectTodo={setSelectedTodoId}
-          onAddTodo={addTodo}
-        />
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <TaskSidebar
+            todos={todos}
+            selectedTodoId={selectedTodoId}
+            onSelectTodo={setSelectedTodoId}
+            onAddTodo={addTodo}
+          />
+        </DragDropContext>
       </div>
 
       <div className={`paper-container ${activeTab === 'focus' ? 'mobile-show' : 'mobile-hide'}`}>
         <div className="left-segment">
           {selectedTodo ? (
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <TodoList
-                todos={[selectedTodo]}
-                onToggleComplete={toggleComplete}
-                onDelete={deleteTodo}
-                onAddSubTask={addSubTask}
-                onToggleSubTask={toggleSubTask}
-                onDeleteSubTask={deleteSubTask}
-                onSubTaskFocus={startFocus}
-                activeSubTaskId={activeSubTask?.subTaskId}
-                onEditTodo={editTodo}
-                onEditSubTask={editSubTask}
-              />
-            </DragDropContext>
+            <TodoList
+              todos={[selectedTodo]}
+              onToggleComplete={toggleComplete}
+              onDelete={deleteTodo}
+              onAddSubTask={addSubTask}
+              onToggleSubTask={toggleSubTask}
+              onDeleteSubTask={deleteSubTask}
+              onSubTaskFocus={startFocus}
+              activeSubTaskId={activeSubTask?.subTaskId}
+              onEditTodo={editTodo}
+              onEditSubTask={editSubTask}
+            />
           ) : (
             <div style={{ textAlign: 'center', padding: '50px', color: '#aaa' }}>
               Select or add a task from the rack
