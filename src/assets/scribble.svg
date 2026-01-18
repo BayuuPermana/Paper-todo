@@ -1,3 +1,3 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 15" preserveAspectRatio="none">
-  <path d="M2,7 C50,14 150,0 198,7" stroke="black" stroke-width="3" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 20" preserveAspectRatio="none">
+  <path d="M2,10 L10,2 L25,18 L40,5 L60,15 L80,3 L100,17 L125,4 L150,16 L175,2 L198,12" stroke="black" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
 </svg>
