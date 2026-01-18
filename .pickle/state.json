@@ -1,6 +1,6 @@
 {
   "active": true,
-  "task": "Fix Drag and Drop snap-back issue in Sidebar",
+  "task": "implement drag n drop function; Image quality shouldn't drop, tape on image needs to be more visible also resize the image into some standard so it doesn't take too much space in the detail page",
   "iteration": 0,
   "max_iterations": 20,
   "step": "prd"

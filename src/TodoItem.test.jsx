@@ -8,6 +8,29 @@ vi.mock('./assets/trash-bin-icon.png', () => ({
   default: 'trash-icon-stub',
 }));
 
+// Mock DnD components to avoid context errors
+vi.mock('react-beautiful-dnd', () => ({
+  DragDropContext: ({ children }) => <div>{children}</div>,
+  Droppable: ({ children }) => children({
+    draggableProps: {},
+    innerRef: vi.fn(),
+    placeholder: null,
+  }, {}),
+  Draggable: ({ children }) => children({
+    draggableProps: {},
+    dragHandleProps: {},
+    innerRef: vi.fn(),
+  }, {}),
+}));
+
+vi.mock('./StrictModeDroppable', () => ({
+  StrictModeDroppable: ({ children }) => <div>{children({
+    droppableProps: {},
+    innerRef: vi.fn(),
+    placeholder: null,
+  })}</div>,
+}));
+
 // Mock SubTaskItem to isolate testing
 vi.mock('./SubTaskItem', () => ({
   default: ({ subTask }) => <div data-testid="sub-task-item">{subTask.text}</div>,
@@ -40,7 +63,7 @@ describe('TodoItem', () => {
     expect(screen.getByText('Main Task')).toBeInTheDocument();
   });
 
-  it('renders subtasks', () => {
+  it('renders subtasks', async () => {
     render(
       <TodoItem
         todo={mockTodo}
@@ -48,7 +71,7 @@ describe('TodoItem', () => {
         onDelete={mockDelete}
       />
     );
-    expect(screen.getAllByTestId('sub-task-item')).toHaveLength(2);
+    expect(await screen.findAllByTestId('sub-task-item')).toHaveLength(2);
     expect(screen.getByText('Subtask 1')).toBeInTheDocument();
     expect(screen.getByText('Subtask 2')).toBeInTheDocument();
   });

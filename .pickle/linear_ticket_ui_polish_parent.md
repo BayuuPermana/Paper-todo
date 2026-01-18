@@ -1,7 +1,7 @@
 ---
 id: ui-polish-epic
 title: [Epic] Mobile UI Polish & Theme Consistency
-status: Backlog
+status: Done
 priority: Medium
 project: Paper-todo
 created: 2026-01-19

@@ -1,7 +1,7 @@
 ---
 id: fix-dnd-snapback
 title: Fix Drag and Drop Snap-Back Issue
-status: Plan in Review
+status: Done
 links:
   - url: prd.md
     title: PRD

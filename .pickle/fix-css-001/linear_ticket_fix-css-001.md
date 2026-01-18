@@ -1,7 +1,7 @@
 ---
 id: fix-css-001
 title: Fix CSS Specificity for Mobile-Only Elements
-status: Research Needed
+status: Done
 priority: High
 project: Paper-todo
 created: 2026-01-19

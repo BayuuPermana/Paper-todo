@@ -1,22 +1,22 @@
 ---
-id: parent-css-fix
-title: [Epic] Fix Mobile Header/Footer Visibility on Desktop
+id: epic-dnd-image
+title: "[Epic] Drag & Drop and Image Polish"
 status: Backlog
 priority: High
-project: Paper-todo
+project: project
 created: 2026-01-19
 updated: 2026-01-19
 links:
   - url: prd.md
     title: PRD
-labels: [epic, css, ui]
+labels: [epic, ui, ux]
 assignee: Pickle Rick
 ---
 
 # Description
 
 ## Problem to solve
-The "Sticky Mobile Header" and "Bottom Matrix" are visible on desktop (>1200px) due to CSS specificity issues, causing visual clutter ("slop").
+Subtasks cannot be reordered, image quality is poor, and the "tape" aesthetic is barely visible. The UI needs to feel more like a physical paper notebook.
 
 ## Solution
-Implement the PRD requirements: Ensure strict visibility rules for mobile-only elements using CSS overrides or specificity corrections.
+Implement subtask drag-and-drop, upgrade image processing to preserve quality, enhance tape CSS, and standardize image display sizes.

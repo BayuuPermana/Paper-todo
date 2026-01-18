@@ -132,12 +132,27 @@ function App() {
 
   const handleDragEnd = (result) => {
     if (!result.destination) return;
-    saveHistory();
-    const items = Array.from(todos);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
+    const { source, destination } = result;
 
-    setTodos(items);
+    saveHistory();
+
+    if (source.droppableId === 'sidebar-todos') {
+      const items = Array.from(todos);
+      const [reorderedItem] = items.splice(source.index, 1);
+      items.splice(destination.index, 0, reorderedItem);
+      setTodos(items);
+    } else if (source.droppableId.startsWith('subtasks-')) {
+      const todoId = source.droppableId.replace('subtasks-', '');
+      setTodos(prev => prev.map(todo => {
+        if (todo.id === todoId) {
+          const newSubTasks = Array.from(todo.subTasks);
+          const [reordered] = newSubTasks.splice(source.index, 1);
+          newSubTasks.splice(destination.index, 0, reordered);
+          return { ...todo, subTasks: newSubTasks };
+        }
+        return todo;
+      }));
+    }
   };
 
   const addTodo = (text, image = null) => {
@@ -331,89 +346,89 @@ function App() {
   const todayStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
   return (
-    <div className="app-layout">
-      {/* Mobile Sticky Header */}
-      <div className="command-header mobile-only">
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-          <div style={{ fontWeight: 'bold', fontSize: '0.9em', color: '#666' }}>{todayStr}</div>
-          <div style={{ fontSize: '0.7em', color: '#888' }}>🔥 {calculateStreak()} Streak</div>
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <div className="app-layout">
+        {/* Mobile Sticky Header */}
+        <div className="command-header mobile-only">
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+            <div style={{ fontWeight: 'bold', fontSize: '0.9em', color: '#666' }}>{todayStr}</div>
+            <div style={{ fontSize: '0.7em', color: '#888' }}>🔥 {calculateStreak()} Streak</div>
+          </div>
+          <PomodoroTimer variant="header" activeSubTaskName={getActiveSubTaskName()} />
         </div>
-        <PomodoroTimer variant="header" activeSubTaskName={getActiveSubTaskName()} />
-      </div>
 
-      <div className={`task-sidebar ${activeTab === 'archive' ? 'mobile-show' : 'mobile-hide'}`}>
-        <DragDropContext onDragEnd={handleDragEnd} key={activeTab}>
+        <div className={`task-sidebar ${activeTab === 'archive' ? 'mobile-show' : 'mobile-hide'}`}>
           <TaskSidebar
             todos={todos}
             selectedTodoId={selectedTodoId}
             onSelectTodo={setSelectedTodoId}
             onAddTodo={addTodo}
           />
-        </DragDropContext>
-      </div>
-
-      <div className={`paper-container ${activeTab === 'focus' ? 'mobile-show' : 'mobile-hide'}`}>
-        <div className="left-segment">
-          {selectedTodo ? (
-            <TodoList
-              todos={[selectedTodo]}
-              onToggleComplete={toggleComplete}
-              onDelete={deleteTodo}
-              onAddSubTask={addSubTask}
-              onToggleSubTask={toggleSubTask}
-              onDeleteSubTask={deleteSubTask}
-              onSubTaskFocus={startFocus}
-              activeSubTaskId={activeSubTask?.subTaskId}
-              onEditTodo={editTodo}
-              onEditSubTask={editSubTask}
-            />
-          ) : (
-            <div style={{ textAlign: 'center', padding: '50px', color: '#aaa' }}>
-              Select or add a task from the rack
-            </div>
-          )}
         </div>
-        <div className="right-segment desktop-only">
-          <div className="streak-display" style={{ 
-            textAlign: 'center', 
-            fontSize: '1.2em', 
-            fontWeight: 'bold', 
-            marginBottom: '10px',
-            color: '#444'
-          }}>
-            🔥 {calculateStreak()} Day Streak
+
+        <div className={`paper-container ${activeTab === 'focus' ? 'mobile-show' : 'mobile-hide'}`}>
+          <div className="left-segment">
+            {selectedTodo ? (
+              <TodoList
+                todos={[selectedTodo]}
+                onToggleComplete={toggleComplete}
+                onDelete={deleteTodo}
+                onAddSubTask={addSubTask}
+                onToggleSubTask={toggleSubTask}
+                onDeleteSubTask={deleteSubTask}
+                onSubTaskFocus={startFocus}
+                activeSubTaskId={activeSubTask?.subTaskId}
+                onEditTodo={editTodo}
+                onEditSubTask={editSubTask}
+              />
+            ) : (
+              <div style={{ textAlign: 'center', padding: '50px', color: '#aaa' }}>
+                Select or add a task from the rack
+              </div>
+            )}
           </div>
-          <PaperCalendar activityLog={activityLog} />
-          <PomodoroTimer activeSubTaskName={getActiveSubTaskName()} />
+          <div className="right-segment desktop-only">
+            <div className="streak-display" style={{ 
+              textAlign: 'center', 
+              fontSize: '1.2em', 
+              fontWeight: 'bold', 
+              marginBottom: '10px',
+              color: '#444'
+            }}>
+              🔥 {calculateStreak()} Day Streak
+            </div>
+            <PaperCalendar activityLog={activityLog} />
+            <PomodoroTimer activeSubTaskName={getActiveSubTaskName()} />
+          </div>
+        </div>
+
+        {/* Mobile Bottom Matrix */}
+        <div className="bottom-matrix mobile-only">
+          <button 
+            className={`tab-item ${activeTab === 'archive' ? 'active' : ''}`}
+            onClick={() => setActiveTab('archive')}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 8v13H3V8" />
+              <path d="M1 3h22v5H1z" />
+              <path d="M10 12h4" />
+            </svg>
+            <span>Archive</span>
+          </button>
+          <button 
+            className={`tab-item ${activeTab === 'focus' ? 'active' : ''}`}
+            onClick={() => setActiveTab('focus')}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <circle cx="12" cy="12" r="6" />
+              <circle cx="12" cy="12" r="2" />
+            </svg>
+            <span>Focus</span>
+          </button>
         </div>
       </div>
-
-      {/* Mobile Bottom Matrix */}
-      <div className="bottom-matrix mobile-only">
-        <button 
-          className={`tab-item ${activeTab === 'archive' ? 'active' : ''}`}
-          onClick={() => setActiveTab('archive')}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 8v13H3V8" />
-            <path d="M1 3h22v5H1z" />
-            <path d="M10 12h4" />
-          </svg>
-          <span>Archive</span>
-        </button>
-        <button 
-          className={`tab-item ${activeTab === 'focus' ? 'active' : ''}`}
-          onClick={() => setActiveTab('focus')}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10" />
-            <circle cx="12" cy="12" r="6" />
-            <circle cx="12" cy="12" r="2" />
-          </svg>
-          <span>Focus</span>
-        </button>
-      </div>
-    </div>
+    </DragDropContext>
   );
 }
 

@@ -1,75 +1,90 @@
-# Mobile-Only Header/Footer Visibility PRD
+# Drag & Drop and Image Polish PRD
 
 ## HR Eng
 
-| Mobile-Only Header/Footer Visibility PRD |  | Summary: Fix the CSS specificity issue causing the mobile header and footer to appear on desktop views. |
+| Drag & Drop and Image Polish PRD |  | [Summary: Implementation of subtask drag-and-drop, image quality preservation, tape visibility enhancement, and standardized image resizing.] |
 | :---- | :---- | :---- |
-| **Author**: Pickle Rick **Contributors**: Morty (Useleless) **Intended audience**: Engineering | **Status**: Draft **Created**: 2026-01-19 | **Self Link**: N/A **Context**: Paper-todo **Visibility**: Public |
+| **Author**: Pickle Rick **Contributors**: Morty **Intended audience**: Engineering | **Status**: Draft **Created**: 2026-01-19 | **Self Link**: N/A **Context**: Paper-todo **Visibility**: Public |
 
 ## Introduction
 
-The application's "Sticky Mobile Header" and "Bottom Matrix" are currently visible on desktop views, despite being intended for mobile only. This creates visual "slop" and clutters the desktop interface. We need to enforce strict visibility rules based on the viewport.
+The application currently lacks reordering capabilities for subtasks. Additionally, the image processing pipeline degrades quality, the "tape" aesthetic is insufficiently visible, and images are not standardized in size, leading to layout inconsistencies.
 
 ## Problem Statement
 
-**Current Process:** The `.mobile-only` utility class uses `display: none` but is defined *before* the component classes (`.command-header`, `.bottom-matrix`) in `index.css`. Due to CSS cascading rules, the component's `display: flex` overrides the utility's `display: none`.
-**Primary Users:** Desktop users.
-**Pain Points:** Visual clutter, redundant navigation, "Slop".
-**Importance:** The desktop view should be clean and focused, utilizing the sidebar and main paper container, not the mobile crutches.
+**Current Process:** 
+- Subtasks are static and cannot be reordered.
+- Images are compressed to 70% quality JPEG.
+- Tape decorations are faint and easily missed.
+- Images take variable/excessive space in the detail view.
+
+**Primary Users:** Users who need to organize complex tasks with visual evidence.
+**Pain Points:** 
+- Frustrating subtask organization.
+- Poor visual clarity of attached images.
+- Weak theme immersion (tape visibility).
+- Layout "slop" due to unstandardized image sizes.
+
+**Importance:** Organizing subtasks is a core workflow. High-quality visuals and consistent UI are critical for the "Paper" aesthetic.
 
 ## Objective & Scope
 
-**Objective:** Ensure `.mobile-only` elements (Header/Footer) are strictly hidden on viewports larger than the mobile breakpoint (1200px).
-**Ideal Outcome:** Desktop view shows ONLY the Sidebar and Paper Container. Mobile view shows Header/Footer.
+**Objective:** 
+- Implement functional drag-and-drop for subtasks.
+- Ensure high-quality image storage.
+- Standardize image display sizes.
+- Maximize "tape" visibility for theme consistency.
+
+**Ideal Outcome:** Users can fluidly reorder steps, images look crisp and are taped firmly to the page in a standard size.
 
 ### In-scope or Goals
-- Update `src/index.css` to fix the specificity/cascade issue.
-- Verify visibility on both Desktop (>1200px) and Mobile (<=1200px).
+- Subtask Drag-and-drop implementation using `react-beautiful-dnd`.
+- `ImageProcessor.js` update for quality.
+- `index.css` update for tape visibility and standard image sizing.
+- `TodoItem.jsx` refactor to support subtask DnD.
 
 ### Not-in-scope or Non-Goals
-- Redesigning the Header/Footer.
-- Changing the breakpoint (sticking to 1200px).
+- Multi-list DnD (moving subtasks between todos).
+- Advanced image editing (cropping, etc.).
 
 ## Product Requirements
 
 ### Critical User Journeys (CUJs)
-1. **Desktop View**: User opens app on a large screen (>1200px). They see the Sidebar and Todo List. They DO NOT see the Sticky Header or Bottom Matrix.
-2. **Mobile View**: User resizes window or opens on mobile (<1200px). The Sticky Header and Bottom Matrix appear. The Sidebar converts to its mobile behavior (hidden by default).
+1. **Reorder Steps**: User attaches multiple steps to a task, realizes the order is wrong, and drags Step 3 to the position of Step 1.
+2. **Visual Evidence**: User attaches a high-res screenshot; it remains sharp and fits perfectly in the "taped" frame.
 
 ### Functional Requirements
 
 | Priority | Requirement | User Story |
 | :---- | :---- | :---- |
-| P0 | Hide `.command-header` on Desktop | As a desktop user, I want the top bar gone so I can focus on my tasks. |
-| P0 | Hide `.bottom-matrix` on Desktop | As a desktop user, I don't need a bottom nav bar because I have a sidebar. |
-| P1 | Maintain `display: flex` layout on Mobile | As a mobile user, I still need the header/footer to look correct (flexbox). |
+| P0 | Subtask DnD | As a user, I want to reorder my subtasks by dragging them. |
+| P0 | High Quality Images | As a user, I want my attached images to not look blurry. |
+| P1 | Standardized Sizing | As a user, I want images to have a consistent size in the detail view. |
+| P1 | Visible Tape | As a user, I want the "taped" aesthetic to be distinct and immersive. |
 
 ## Assumptions
 
-- The breakpoint `1200px` is the intended "Mobile" boundary as per existing CSS.
-- No other components rely on this broken behavior.
+- `react-beautiful-dnd` is compatible with the current React version.
+- `localStorage` can handle slightly larger (higher quality) images within reasonable limits.
 
 ## Risks & Mitigations
 
-- **Risk**: Adding `!important` might break other overrides. -> **Mitigation**: Use specific overrides or move utility classes to the end of the file.
-- **Risk**: Flash of unstyled content. -> **Mitigation**: CSS parses fast; negligible risk.
+- **Risk**: `localStorage` quota exceeded. -> **Mitigation**: Use reasonable resizing (e.g., 800px instead of 400px) and PNG/High-Quality JPEG.
+- **Risk**: DnD complexity in nested components. -> **Mitigation**: Use `StrictModeDroppable` and ensure unique `draggableId`s.
 
 ## Tradeoff
 
-- **Option A**: Move utility classes to bottom. **Pros**: Cleanest. **Cons**: Maintenance risk if someone adds styles below it later.
-- **Option B**: Use `!important` on `.mobile-only`. **Pros**: Guaranteed enforcement. **Cons**: "nuclear" option.
-- **Selected**: Option B (or equivalent specificity boost) for the `display: none` rule to ensure it acts as a true utility override.
+- **Quality vs Storage**: Higher quality images take more space. We will favor quality for the "Evidence" feel but cap at a reasonable dimension.
 
 ## Business Benefits/Impact/Metrics
 
 **Success Metrics:**
-
-| Metric | Current State (Benchmark) | Future State (Target) | Savings/Impacts |
-| :---- | :---- | :---- | :---- |
-| Desktop Clutter | High (Header/Footer visible) | Low (Hidden) | Improved aesthetics |
+- Functional DnD for subtasks.
+- Subjective improvement in image clarity.
+- Standardized image dimensions in detail view.
 
 ## Stakeholders / Owners
 
 | Name | Team/Org | Role | Note |
 | :---- | :---- | :---- | :---- |
-| Pickle Rick | Universe C-137 | Lead Engineer | *Belch* |
+| Pickle Rick | C-137 | God-Tier Engineer | *Belch* |

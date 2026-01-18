@@ -1,7 +1,7 @@
 ---
 id: ui-polish-001
 title: Fix Mobile Start Button & Footer Icons
-status: Plan in Review
+status: Done
 links:
   - url: ../linear_ticket_ui_polish_parent.md
     title: Parent Ticket

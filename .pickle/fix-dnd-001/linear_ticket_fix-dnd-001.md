@@ -1,7 +1,7 @@
 ---
 id: fix-dnd-001
 title: Fix Missing Drag and Drop for Task Sidebar
-status: Plan in Review
+status: Done
 links:
   - url: ../linear_ticket_dnd_parent.md
     title: Parent Ticket

@@ -1,7 +1,7 @@
 ---
 id: fix-white-screen
 title: Fix White Screen Crash (Orphaned DnD Components)
-status: Plan in Review
+status: Done
 links:
   - url: prd.md
     title: PRD

@@ -73,7 +73,7 @@ function SubTaskItem({ subTask, onToggle, onDelete, onFocus, isFocused, onEdit }
       {subTask.image && (
         <div className="taped-image-container small" style={{ margin: '5px 10px', padding: '8px' }}>
           <div className="tape-top-left" style={{ width: '30px', height: '12px', top: '-5px', left: '-10px' }}></div>
-          <img src={subTask.image} alt="Step detail" className="taped-image" style={{ width: '100px' }} />
+          <img src={subTask.image} alt="Step detail" className="taped-image" />
           <div className="tape-bottom-right" style={{ width: '30px', height: '12px', bottom: '-5px', right: '-10px' }}></div>
         </div>
       )}

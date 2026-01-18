@@ -1,4 +1,6 @@
 import React, { useState, useRef } from 'react';
+import { Draggable } from 'react-beautiful-dnd';
+import { StrictModeDroppable } from './StrictModeDroppable';
 import trashIcon from './assets/trash-bin-icon.png';
 import SubTaskItem from './SubTaskItem';
 import { processImage } from './utils/ImageProcessor';
@@ -115,62 +117,86 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
       )}
       
       {((todo.subTasks && todo.subTasks.length > 0) || isAddingSubTask) && (
-        <div className="sub-tasks-list" style={{ marginLeft: '20px', marginTop: '5px' }}>
-          {todo.subTasks && todo.subTasks.map((subTask) => (
-            <SubTaskItem
-              key={subTask.id}
-              subTask={subTask}
-              onToggle={onSubTaskToggle}
-              onDelete={onSubTaskDelete}
-              onFocus={onSubTaskFocus}
-              isFocused={activeSubTaskId === subTask.id}
-              onEdit={(newText) => onSubTaskEdit(subTask.id, newText)}
-            />
-          ))}
-          
-          {isAddingSubTask && (
-            <form onSubmit={handleAddSubTask} className="add-subtask-form" style={{ marginTop: '10px' }}>
-              <div className="input-matrix">
-                <button 
-                  type="button" 
-                  className="matrix-btn matrix-btn-left"
-                  onClick={() => fileInputRef.current.click()}
-                  style={{ opacity: subTaskImage ? 1 : 0.4 }}
-                  title={subTaskImage ? 'Image attached' : 'Attach image'}
-                >
-                  +
-                </button>
-                <input
-                  type="text"
-                  value={subTaskText}
-                  onChange={(e) => setSubTaskText(e.target.value)}
-                  placeholder="New step..."
-                  autoFocus
-                  onBlur={() => !subTaskText && !subTaskImage && setIsAddingSubTask(false)}
-                />
-                <button 
-                  type="submit" 
-                  className="matrix-btn matrix-btn-right"
-                  disabled={isProcessing}
-                >
-                  {isProcessing ? '...' : '»'}
-                </button>
-              </div>
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleImageChange} 
-                style={{ display: 'none' }} 
-                accept="image/*"
-              />
-              {subTaskImage && (
-                <div style={{ fontSize: '0.6em', color: '#2e7d32', textAlign: 'right', marginTop: '5px' }}>
-                  ✓ Image Attached
-                </div>
+        <StrictModeDroppable droppableId={`subtasks-${todo.id}`}>
+          {(provided) => (
+            <div 
+              className="sub-tasks-list" 
+              style={{ marginLeft: '20px', marginTop: '5px' }}
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {todo.subTasks && todo.subTasks.map((subTask, index) => (
+                <Draggable key={subTask.id} draggableId={subTask.id} index={index}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={{
+                        ...provided.draggableProps.style,
+                        marginBottom: '5px',
+                        opacity: snapshot.isDragging ? 0.8 : 1
+                      }}
+                    >
+                      <SubTaskItem
+                        subTask={subTask}
+                        onToggle={onSubTaskToggle}
+                        onDelete={onSubTaskDelete}
+                        onFocus={onSubTaskFocus}
+                        isFocused={activeSubTaskId === subTask.id}
+                        onEdit={(newText) => onSubTaskEdit(subTask.id, newText)}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+              
+              {isAddingSubTask && (
+                <form onSubmit={handleAddSubTask} className="add-subtask-form" style={{ marginTop: '10px' }}>
+                  <div className="input-matrix">
+                    <button 
+                      type="button" 
+                      className="matrix-btn matrix-btn-left"
+                      onClick={() => fileInputRef.current.click()}
+                      style={{ opacity: subTaskImage ? 1 : 0.4 }}
+                      title={subTaskImage ? 'Image attached' : 'Attach image'}
+                    >
+                      +
+                    </button>
+                    <input
+                      type="text"
+                      value={subTaskText}
+                      onChange={(e) => setSubTaskText(e.target.value)}
+                      placeholder="New step..."
+                      autoFocus
+                      onBlur={() => !subTaskText && !subTaskImage && setIsAddingSubTask(false)}
+                    />
+                    <button 
+                      type="submit" 
+                      className="matrix-btn matrix-btn-right"
+                      disabled={isProcessing}
+                    >
+                      {isProcessing ? '...' : '»'}
+                    </button>
+                  </div>
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleImageChange} 
+                    style={{ display: 'none' }} 
+                    accept="image/*"
+                  />
+                  {subTaskImage && (
+                    <div style={{ fontSize: '0.6em', color: '#2e7d32', textAlign: 'right', marginTop: '5px' }}>
+                      ✓ Image Attached
+                    </div>
+                  )}
+                </form>
               )}
-            </form>
+            </div>
           )}
-        </div>
+        </StrictModeDroppable>
       )}
 
       {!isAddingSubTask && (

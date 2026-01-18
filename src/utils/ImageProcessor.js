@@ -12,7 +12,7 @@ export const processImage = (file) => {
       img.src = e.target.result;
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const MAX_SIZE = 400; // Efficient size for localStorage
+        const MAX_SIZE = 800; // Better quality preservation
         let width = img.width;
         let height = img.height;
 
@@ -33,8 +33,8 @@ export const processImage = (file) => {
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, width, height);
 
-        // Export as compressed JPEG
-        resolve(canvas.toDataURL('image/jpeg', 0.7));
+        // Export as high-quality JPEG
+        resolve(canvas.toDataURL('image/jpeg', 0.9));
       };
       img.onerror = () => reject('Failed to load image');
     };

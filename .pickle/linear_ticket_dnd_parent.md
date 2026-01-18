@@ -1,7 +1,7 @@
 ---
 id: fix-dnd-parent
 title: [Epic] Fix Drag and Drop Functionality
-status: Backlog
+status: Done
 priority: High
 project: Paper-todo
 created: 2026-01-19
