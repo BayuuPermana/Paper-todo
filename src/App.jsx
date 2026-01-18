@@ -31,6 +31,7 @@ function App() {
     return localStorage.getItem('paper-selected-todo') || null;
   });
 
+  const [activeTab, setActiveTab] = useState('archive'); // 'archive' or 'focus'
   const [activeSubTask, setActiveSubTask] = useState(null);
   const [undoBuffer, setUndoBuffer] = useState(null);
 
@@ -45,6 +46,10 @@ function App() {
   useEffect(() => {
     if (selectedTodoId) {
       localStorage.setItem('paper-selected-todo', selectedTodoId);
+      // Auto-switch to focus tab on mobile when a project is selected
+      if (window.innerWidth <= 1200) {
+        setActiveTab('focus');
+      }
     } else {
       localStorage.removeItem('paper-selected-todo');
     }
@@ -323,15 +328,28 @@ function App() {
 
   const selectedTodo = todos.find(t => t.id === selectedTodoId);
 
+  const todayStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
   return (
     <div className="app-layout">
-      <TaskSidebar
-        todos={todos}
-        selectedTodoId={selectedTodoId}
-        onSelectTodo={setSelectedTodoId}
-        onAddTodo={addTodo}
-      />
-      <div className="paper-container">
+      {/* Mobile Sticky Header */}
+      <div className="command-header mobile-only">
+        <div style={{ fontWeight: 'bold', fontSize: '1.1em' }}>{todayStr}</div>
+        <div style={{ transform: 'scale(0.8)', transformOrigin: 'right center' }}>
+          <PomodoroTimer activeSubTaskName={getActiveSubTaskName()} />
+        </div>
+      </div>
+
+      <div className={`task-sidebar ${activeTab === 'archive' ? 'mobile-show' : 'mobile-hide'}`}>
+        <TaskSidebar
+          todos={todos}
+          selectedTodoId={selectedTodoId}
+          onSelectTodo={setSelectedTodoId}
+          onAddTodo={addTodo}
+        />
+      </div>
+
+      <div className={`paper-container ${activeTab === 'focus' ? 'mobile-show' : 'mobile-hide'}`}>
         <div className="left-segment">
           {selectedTodo ? (
             <DragDropContext onDragEnd={handleDragEnd}>
@@ -354,7 +372,7 @@ function App() {
             </div>
           )}
         </div>
-        <div className="right-segment">
+        <div className="right-segment desktop-only">
           <div className="streak-display" style={{ 
             textAlign: 'center', 
             fontSize: '1.2em', 
@@ -367,6 +385,24 @@ function App() {
           <PaperCalendar activityLog={activityLog} />
           <PomodoroTimer activeSubTaskName={getActiveSubTaskName()} />
         </div>
+      </div>
+
+      {/* Mobile Bottom Matrix */}
+      <div className="bottom-matrix mobile-only">
+        <button 
+          className={`tab-item ${activeTab === 'archive' ? 'active' : ''}`}
+          onClick={() => setActiveTab('archive')}
+        >
+          <span style={{ fontSize: '1.5em' }}>🗄️</span>
+          <span>Archive</span>
+        </button>
+        <button 
+          className={`tab-item ${activeTab === 'focus' ? 'active' : ''}`}
+          onClick={() => setActiveTab('focus')}
+        >
+          <span style={{ fontSize: '1.5em' }}>🎯</span>
+          <span>Focus</span>
+        </button>
       </div>
     </div>
   );

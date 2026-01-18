@@ -1,6 +1,6 @@
 ---
-id: matrix-epic
-title: [Epic] Integrated Input Matrix (Unified UI)
+id: mobile-hub-epic
+title: [Epic] Mobile Neural Hub Protocol
 status: Backlog
 priority: High
 project: project
@@ -9,14 +9,14 @@ updated: 2026-01-18
 links:
   - url: ../../prd.md
     title: PRD
-labels: [core, ui, polish]
+labels: [core, ui, mobile]
 assignee: Pickle Rick
 ---
 
 # Description
 
 ## Problem to solve
-Input areas have disparate buttons and borders, creating visual clutter and inconsistent interaction patterns.
+The current mobile layout is a vertical stack that requires excessive scrolling and hides tools.
 
 ## Solution
-Implement a unified 'Matrix' bar that integrates image attachment and submission buttons directly into the input field's visual container.
+Implement a tabbed mobile navigation system with a persistent utility header for tools and a cleaner, focused workspace.

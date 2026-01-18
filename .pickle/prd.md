@@ -1,54 +1,56 @@
-# Integrated Input Matrix PRD
+# Mobile Neural Hub Protocol PRD
 
 ## HR Eng
 
-| Integrated Input PRD |  | Summary: Refactoring task and subtask input areas into a unified, high-performance 'Matrix' bar where action buttons are integrated directly into the input container. |
+| Mobile Neural Hub PRD |  | Summary: Refactoring the mobile experience to use a tabbed architecture, a sticky utility header (Timer + Date), and an uncluttered 'Focus-First' layout. |
 | :---- | :---- | :---- |
 | **Author**: Pickle Rick **Contributors**: Morty **Intended audience**: Engineering | **Status**: Draft **Created**: 2026-01-18 | **Visibility**: Public |
 
 ## Introduction
-The current input areas have disparate buttons that create visual friction. This protocol introduces a 'Unified Bar' architecture where image attachment and submission actions are visually merged into the input field itself, creating a single, tactile 'Matrix'.
+The current 3-pane stack on mobile is a "Jerry-level" mess. It creates infinite scrolling and cognitive load. This protocol introduces a tab-based mobile navigation system with a persistent utility header to ensure focus and ease of use on small viewports.
 
 ## Problem Statement
-**Current Process**: Input fields and buttons are adjacent but separate elements.
-**Primary Users**: People who appreciate geometric precision and visual hygiene.
-**Pain Points**: Visual clutter from multiple borders and spacing gaps. Non-optimal submission symbol.
-**Importance**: A professional workspace requires a high signal-to-noise ratio.
+**Current Process**: All segments (Sidebar, Workspace, Tools) stack vertically, requiring excessive scrolling.
+**Primary Users**: Mobile power-users who need to manage tasks on the go.
+**Pain Points**: Vertical clutter. Tools disappearing on scroll. Hard to reach 'New Task' input.
+**Importance**: Visual clarity is essential for focus in a mobile environment.
 
 ## Objective & Scope
-**Objective**: Implement a unified input bar for tasks and subtasks.
-**Ideal Outcome**: A single border-encased container housing the [+] button, the text input, and the [»] submission button.
+**Objective**: Implement a tabbed navigation system and a sticky utility header for mobile viewports.
+**Ideal Outcome**: A clean, single-pane mobile experience where tools are always accessible at the top and navigation happens via a bottom tab bar.
 
 ### In-scope or Goals
-- **Unified Container**: Flexbox-based wrapper with 'Paper' border.
-- **Integrated Buttons**: Internal buttons with no external borders, appearing as part of the bar.
-- **Symbolic Submission**: Replace '->' with '»' (Double Chevron).
-- **Responsive Integrity**: Ensure the bar remains horizontal on all viewports.
+- **Mobile Tab State**: Implement `activeTab` state in `App.jsx`.
+- **Sticky Utility Header**: A top-fixed bar containing the Pomodoro Timer and current Date/Mini-Calendar.
+- **Matrix Tab Bar**: A bottom-fixed bar to toggle between 'Archive' (Projects) and 'Workspace' (Steps).
+- **Responsive Visibility**: Only show the relevant pane for the active tab on mobile (< 1024px).
+- **Header Add-Bar**: Place the `AddTodo` input prominently at the top of the 'Archive' tab.
 
 ### Not-in-scope or Non-Goals
-- Changing the underlying submission logic.
-- Adding multi-line support.
+- Multi-pane display on mobile.
+- Changing desktop grid behavior.
 
 ## Product Requirements
 
 ### Critical User Journeys (CUJs)
-1. **The Rapid Entry**: User clicks into the integrated bar. They see the [+] on the left and [»] on the right. They type their genius and hit [»]. It feels like one smooth operation.
-2. **The Mobile Specialist**: User on a phone sees the same unified bar, perfectly horizontal, no awkward stacking.
+1. **The Instant Objective**: User opens the app on mobile. They immediately see today's date and the timer at the top. They type a new goal into the bar and hit '»'. 
+2. **The Smooth Pivot**: User is working on steps in the 'Workspace'. They need to switch projects, so they tap the 'Archive' tab at the bottom, pick a new project, and are automatically taken back to the 'Workspace'.
 
 ### Functional Requirements
 
 | Priority | Requirement | User Story |
 | :---- | :---- | :---- |
-| P0 | Unified Border Container | As a user, I want the input and buttons to look like one piece of paper. |
-| P0 | Symbolic Submit (») | As a user, I want a precise, professional symbol for submission. |
-| P1 | Horizontal Stability | As a mobile user, I want the bar to stay wide and organized. |
+| P0 | Mobile Tab Navigation | As a user, I want to switch views without scrolling for miles. |
+| P0 | Sticky Utility Header | As a user, I want to see my timer and the date at all times. |
+| P1 | Date-only Mini Calendar | As a user, I want a compact date display to save space. |
+| P1 | Responsive Stacking Refactor | As a developer, I want to hide inactive segments on mobile. |
 
 ## Assumptions
-- The 'Paper' aesthetic (border-radius, black borders) must be consistent.
-- Modern flexbox support.
+- Breakpoint remains 1024px or 1200px as per current CSS.
+- The "Paper" aesthetic must persist in the new mobile-only elements.
 
 ## Risks & Mitigations
-- **Risk**: Input field being too narrow on mobile. -> **Mitigation**: Use `flex-grow: 1` and minimal button padding.
+- **Risk**: Overlapping fixed elements. -> **Mitigation**: Use careful z-indexing and viewport-based padding.
 
 ## Tradeoff
-- **Separation vs. Unity**: We trade distinct hit-areas for a cleaner, more modern 'Stationery' feel.
+- **Density vs. Context**: We trade seeing everything at once for seeing one thing perfectly.
