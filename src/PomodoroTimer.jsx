@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { audio } from './utils/GodAudio';
 
 function PomodoroTimer({ activeSubTaskName, onTaskComplete }) {
   const PRESETS = [15, 25, 45, 60];
@@ -18,6 +19,7 @@ function PomodoroTimer({ activeSubTaskName, onTaskComplete }) {
             return time - 1; 
           }
           if (time === 0) {
+            audio.playChime();
             setIsActive(false);
             return 0;
           }
