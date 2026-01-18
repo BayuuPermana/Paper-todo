@@ -80,7 +80,9 @@ function PomodoroTimer({ activeSubTaskName, onTaskComplete, variant = 'full' }) 
           fontSize: '1.2em', 
           fontWeight: 'bold', 
           fontFamily: 'monospace',
-          color: timeLeft < 0 ? '#2e7d32' : '#333'
+          color: timeLeft < 0 ? '#2e7d32' : '#333',
+          minWidth: '60px',
+          textAlign: 'center'
         }}>
           {formatTime(timeLeft)}
         </div>
@@ -88,14 +90,28 @@ function PomodoroTimer({ activeSubTaskName, onTaskComplete, variant = 'full' }) 
           onClick={toggleTimer}
           disabled={isBurnedOut}
           style={{
-            background: 'none',
-            border: 'none',
+            background: isActive ? '#ffe0b2' : '#f5f5f5',
+            border: '2px solid black',
+            borderRadius: '4px',
             cursor: isBurnedOut ? 'not-allowed' : 'pointer',
-            fontSize: '1em',
-            padding: 0
+            padding: '5px 12px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '32px'
           }}
+          title={isActive ? "Pause Timer" : "Start Timer"}
         >
-          {isActive ? '⏸️' : '▶️'}
+          {isActive ? (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <rect x="6" y="4" width="4" height="16" />
+              <rect x="14" y="4" width="4" height="16" />
+            </svg>
+          ) : (
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+          )}
         </button>
         <button 
           onClick={resetTimer}
@@ -103,11 +119,18 @@ function PomodoroTimer({ activeSubTaskName, onTaskComplete, variant = 'full' }) 
             background: 'none',
             border: 'none',
             cursor: 'pointer',
-            fontSize: '1em',
-            padding: 0
+            padding: '4px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            opacity: 0.6
           }}
+          title="Reset Timer"
         >
-          ↺
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+            <path d="M3 3v5h5" />
+          </svg>
         </button>
       </div>
     );

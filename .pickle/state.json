@@ -1,6 +1,6 @@
 {
   "active": true,
-  "task": "header and footer is a slop in the desktop view mode, we just need the header and footer on mobile view",
+  "task": "Polish Mobile UI: Fix Pomodoro Button and Replace Emojis",
   "iteration": 0,
   "max_iterations": 20,
   "step": "prd"

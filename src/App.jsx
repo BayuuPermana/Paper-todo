@@ -394,14 +394,22 @@ function App() {
           className={`tab-item ${activeTab === 'archive' ? 'active' : ''}`}
           onClick={() => setActiveTab('archive')}
         >
-          <span style={{ fontSize: '1.5em' }}>🗄️</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 8v13H3V8" />
+            <path d="M1 3h22v5H1z" />
+            <path d="M10 12h4" />
+          </svg>
           <span>Archive</span>
         </button>
         <button 
           className={`tab-item ${activeTab === 'focus' ? 'active' : ''}`}
           onClick={() => setActiveTab('focus')}
         >
-          <span style={{ fontSize: '1.5em' }}>🎯</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <circle cx="12" cy="12" r="6" />
+            <circle cx="12" cy="12" r="2" />
+          </svg>
           <span>Focus</span>
         </button>
       </div>
