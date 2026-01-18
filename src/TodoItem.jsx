@@ -1,19 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import trashIcon from './assets/trash-bin-icon.png';
 import SubTaskItem from './SubTaskItem';
+import { processImage } from './utils/ImageProcessor';
 
 function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskToggle, onSubTaskDelete, onSubTaskFocus, activeSubTaskId, onEdit, onSubTaskEdit }) {
   const [isAddingSubTask, setIsAddingSubTask] = useState(false);
   const [subTaskText, setSubTaskText] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(todo.text);
+  const [subTaskImage, setSubTaskImage] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const fileInputRef = useRef(null);
 
   const handleAddSubTask = (e) => {
     e.preventDefault();
-    if (!subTaskText.trim()) return;
-    onAddSubTask(todo.id, subTaskText);
+    if (!subTaskText.trim() || isProcessing) return;
+    onAddSubTask(todo.id, subTaskText, subTaskImage);
     setSubTaskText('');
+    setSubTaskImage(null);
     setIsAddingSubTask(false);
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setIsProcessing(true);
+    try {
+      const compressed = await processImage(file);
+      setSubTaskImage(compressed);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to process image.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleEditSubmit = (e) => {
@@ -108,15 +129,58 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
           ))}
           
           {isAddingSubTask && (
-            <form onSubmit={handleAddSubTask} className="add-subtask-form">
+            <form onSubmit={handleAddSubTask} className="add-subtask-form" style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
               <input
                 type="text"
                 value={subTaskText}
                 onChange={(e) => setSubTaskText(e.target.value)}
                 placeholder="New step"
                 autoFocus
-                onBlur={() => !subTaskText && setIsAddingSubTask(false)}
+                onBlur={() => !subTaskText && !subTaskImage && setIsAddingSubTask(false)}
+                style={{ width: '100%', marginBottom: '5px' }}
               />
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <button 
+                  type="button" 
+                  onClick={() => fileInputRef.current.click()}
+                  style={{ 
+                    background: 'none', 
+                    border: 'none', 
+                    cursor: 'pointer', 
+                    fontSize: '1em',
+                    opacity: subTaskImage ? 1 : 0.4
+                  }}
+                  title={subTaskImage ? 'Image attached' : 'Attach image'}
+                >
+                  🖼️
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={isProcessing}
+                  style={{
+                    padding: '2px 10px',
+                    backgroundColor: '#fff',
+                    border: '1px solid black',
+                    borderRadius: '3px',
+                    fontSize: '0.8em',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {isProcessing ? '...' : 'Add Step'}
+                </button>
+              </div>
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleImageChange} 
+                style={{ display: 'none' }} 
+                accept="image/*"
+              />
+              {subTaskImage && (
+                <div style={{ fontSize: '0.6em', color: '#2e7d32', textAlign: 'right' }}>
+                  ✓ Image Attached
+                </div>
+              )}
             </form>
           )}
         </div>

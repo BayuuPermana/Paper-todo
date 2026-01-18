@@ -377,6 +377,16 @@ body {
       z-index: 1;
     }
 
+    .taped-image-container.small {
+      padding: 10px;
+      margin: 5px 0;
+      box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+    }
+
+    .taped-image-container.small img {
+      max-width: 150px;
+    }
+
     .sidebar-thumbnail {
       width: 24px;
       height: 24px;

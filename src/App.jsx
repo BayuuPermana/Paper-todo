@@ -179,7 +179,7 @@ function App() {
     }, 400);
   };
 
-  const addSubTask = (todoId, text) => {
+  const addSubTask = (todoId, text, image = null) => {
     saveHistory();
     setTodos(todos.map(todo => {
       if (todo.id === todoId) {
@@ -187,7 +187,7 @@ function App() {
           ...todo,
           subTasks: [
             ...todo.subTasks,
-            { id: uuidv4(), text, completed: false }
+            { id: uuidv4(), text, completed: false, image }
           ]
         };
       }
@@ -250,15 +250,22 @@ function App() {
     audio.playPencil();
   };
 
-  const editSubTask = (todoId, subTaskId, newText) => {
+  const editSubTask = (todoId, subTaskId, newText, image = undefined) => {
     saveHistory();
     setTodos(todos.map(todo => {
       if (todo.id === todoId) {
         return {
           ...todo,
-          subTasks: todo.subTasks.map(st => 
-            st.id === subTaskId ? { ...st, text: newText } : st
-          )
+          subTasks: todo.subTasks.map(st => {
+            if (st.id === subTaskId) {
+              return { 
+                ...st, 
+                text: newText, 
+                image: image !== undefined ? image : st.image 
+              };
+            }
+            return st;
+          })
         };
       }
       return todo;

@@ -39,8 +39,8 @@ describe('App', () => {
 
   it('adds a new todo with an empty subTasks array', () => {
     render(<App />);
-    const input = screen.getByPlaceholderText('Add a new task');
-    const addButton = screen.getByText('Add');
+    const input = screen.getByPlaceholderText('New Objective...');
+    const addButton = screen.getByText('Create');
 
     fireEvent.change(input, { target: { value: 'New Task' } });
     fireEvent.click(addButton);
@@ -71,8 +71,8 @@ describe('App', () => {
     // If we add a new task, the old task should persist.
     // If we want to guarantee structure, we should verify that.
     
-    const input = screen.getByPlaceholderText('Add a new task');
-    const addButton = screen.getByText('Add');
+    const input = screen.getByPlaceholderText('New Objective...');
+    const addButton = screen.getByText('Create');
     fireEvent.change(input, { target: { value: 'Trigger Update' } });
     fireEvent.click(addButton);
 
@@ -88,8 +88,8 @@ describe('App', () => {
   it('adds a subtask to a todo', () => {
     render(<App />);
     // Add main task
-    const input = screen.getByPlaceholderText('Add a new task');
-    const addButton = screen.getByText('Add');
+    const input = screen.getByPlaceholderText('New Objective...');
+    const addButton = screen.getByText('Create');
     fireEvent.change(input, { target: { value: 'Main Task' } });
     fireEvent.click(addButton);
 
