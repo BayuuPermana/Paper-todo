@@ -1,56 +1,56 @@
-# Sentient Workspace Protocol PRD
+# Graphite Heatmap & Streaks Protocol PRD
 
 ## HR Eng
 
-| Sentient Workspace PRD |  | Summary: Upgrading the 'Paper-todo' app with math-synthesized audio feedback, a temporal undo buffer, and high-performance keyboard navigation to create a tactile, immersive engineering environment. |
+| Graphite Heatmap PRD |  | Summary: Implementing a productivity tracking system that visualizes task/subtask completions as a GitHub-style heatmap on the Paper Calendar using graphite grey intensities and tracking daily streaks. |
 | :---- | :---- | :---- |
 | **Author**: Pickle Rick **Contributors**: Morty **Intended audience**: Engineering | **Status**: Draft **Created**: 2026-01-18 | **Visibility**: Public |
 
 ## Introduction
-The current application is a silent, static tool. This protocol introduces 'God Mode' enhancements that turn the UI into a responsive, sentient workspace. We will use the Web Audio API to synthesize tactile sounds and CSS transforms to create physical presence.
+The current workspace lacks historical feedback. To achieve "God Mode" productivity, the user needs a visual representation of their labor. This feature introduces an intensity-based calendar heatmap and a streak counter to gamify completion.
 
 ## Problem Statement
-**Current Process**: The app is silent and relies on mouse interaction. Mistakes are permanent until manually recreated.
-**Primary Users**: Power users and geniuses who want to move at the speed of thought.
-**Pain Points**: Lack of tactile feedback. Permanent data loss on accidental delete. Friction in navigation.
-**Importance**: A professional workspace must provide sensory confirmation and temporal safety.
+**Current Process**: Completed tasks provide immediate visual feedback (scribble) but no historical record or progress visualization.
+**Primary Users**: High-performance pickles and their assistants.
+**Pain Points**: Lack of long-term motivation. No visualization of high-productivity days vs. lazy days.
+**Importance**: Visualizing momentum is key to maintaining focus.
 
 ## Objective & Scope
-**Objective**: Implement sensory feedback, keyboard-first navigation, and basic state recovery.
-**Ideal Outcome**: The user can navigate, edit, and recover state using only their keyboard while receiving synthesized acoustic confirmation of every action.
+**Objective**: Track daily completions and visualize intensity on the calendar.
+**Ideal Outcome**: The user sees a 'Graphite' heatmap where darker days represent higher point totals (Task = 3pts, Subtask = 1pt). A streak counter sits prominently above the calendar.
 
 ### In-scope or Goals
-- **Audio Synthesis**: Custom `GodAudio` module using Web Audio API (Pencil scritch, Paper rustle, Crumple).
-- **Temporal Buffer**: Single-action Undo system (Ctrl+Z).
-- **Neural Shortcuts**: `j/k` navigation, `n` for new task, `Enter` for selection.
-- **Convincing Animation**: CSS-based 'crumple and fade' for deletions.
+- **Activity Log**: Persistent storage of completions (timestamps).
+- **Scoring Engine**: 3pts for main tasks, 1pt for subtasks.
+- **Heatmap UI**: 4 levels of graphite grey intensity on the `PaperCalendar`.
+- **Streak Logic**: Consecutive days with >0 points.
+- **UI Header**: Streak display above the calendar.
 
 ### Not-in-scope or Non-Goals
-- Multi-level undo history (limited to 1 step per user request).
-- External audio assets.
+- Historical editing (no fake productivity, Morty!).
+- Social sharing of heatmaps.
 
 ## Product Requirements
 
 ### Critical User Journeys (CUJs)
-1. **The Keyboard Speedster**: User hits 'n', types a task, hits Enter. Navigates the rack with 'j' and 'k' while hearing the 'rustle' of papers.
-2. **The Redo-Jerry**: User deletes a task by accident. They see it 'crumple' away. They hit Ctrl+Z, hear a reverse rustle, and it's back.
+1. **The Momentum Builder**: User completes 3 subtasks and a main task. They check the calendar and see that today has turned a medium grey. The streak counter updates to '5 Days'.
+2. **The New Month**: User navigates to a new month; the heatmap correctly pulls historical data for those dates.
 
 ### Functional Requirements
 
 | Priority | Requirement | User Story |
 | :---- | :---- | :---- |
-| P0 | Web Audio Scritch/Rustle | As a user, I want to hear my actions to feel the 'Paper'. |
-| P0 | Undo State (Latest) | As a user, I want to recover my last deleted or edited item. |
-| P1 | j/k Sidebar Navigation | As a user, I want to fly through my rack without a mouse. |
-| P1 | CSS Crumple Effect | As a user, I want to see the physical impact of 'Delete'. |
+| P0 | Completion Logging | As a system, I want to save every completion event with a timestamp. |
+| P0 | Intensity Rendering | As a user, I want the calendar days to get darker the more I work. |
+| P1 | Streak Counter | As a user, I want to see how many days in a row I've been productive. |
+| P1 | Graphite Aesthetic | As a user, I want the colors to match the paper/pencil theme. |
 
 ## Assumptions
-- Browser supports Web Audio API and modern CSS transitions.
-- The user has speakers (obviously, Morty).
+- `localStorage` has enough space for completion logs (it's just timestamps, Morty).
+- "Day" is defined by the user's local timezone.
 
 ## Risks & Mitigations
-- **Risk**: Audio being annoying. -> **Mitigation**: Keep sounds subtle, high-frequency, and short.
-- **Risk**: Event listener collisions. -> **Mitigation**: Global singleton for shortcut management.
+- **Risk**: Performance lag with huge logs. -> **Mitigation**: Pre-aggregate points by day string (YYYY-MM-DD) during save.
 
 ## Tradeoff
-- **Synthesis vs Assets**: Synthesis is harder to code but results in zero latency and zero bundle bloat.
+- **Simplicity vs. Precision**: We use a simple 4-tier color system rather than a continuous gradient for better visual "paper" clarity.

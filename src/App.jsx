@@ -9,6 +9,7 @@ import TaskSidebar from './TaskSidebar';
 import { audio } from './utils/GodAudio';
 
 const STORAGE_KEY = 'paper-todos';
+const LOG_KEY = 'paper-activity-log';
 
 function App() {
   const [todos, setTodos] = useState(() => {
@@ -21,6 +22,11 @@ function App() {
     }));
   });
 
+  const [activityLog, setActivityLog] = useState(() => {
+    const saved = localStorage.getItem(LOG_KEY);
+    return saved ? JSON.parse(saved) : {};
+  });
+
   const [selectedTodoId, setSelectedTodoId] = useState(() => {
     return localStorage.getItem('paper-selected-todo') || null;
   });
@@ -31,6 +37,10 @@ function App() {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
   }, [todos]);
+
+  useEffect(() => {
+    localStorage.setItem(LOG_KEY, JSON.stringify(activityLog));
+  }, [activityLog]);
 
   useEffect(() => {
     if (selectedTodoId) {
@@ -99,6 +109,14 @@ function App() {
     setUndoBuffer(JSON.parse(JSON.stringify(todos)));
   };
 
+  const logActivity = (pts) => {
+    const today = new Date().toLocaleDateString('en-CA');
+    setActivityLog(prev => ({
+      ...prev,
+      [today]: Math.max(0, (prev[today] || 0) + pts)
+    }));
+  };
+
   const handleUndo = () => {
     if (undoBuffer) {
       setTodos(undoBuffer);
@@ -129,9 +147,14 @@ function App() {
   const toggleComplete = (id) => {
     saveHistory();
     setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
+      todos.map((todo) => {
+        if (todo.id === id) {
+          const newCompleted = !todo.completed;
+          logActivity(newCompleted ? 3 : -3);
+          return { ...todo, completed: newCompleted };
+        }
+        return todo;
+      })
     );
     audio.playPencil();
   };
@@ -142,6 +165,9 @@ function App() {
     
     // Physical delay for animation
     setTimeout(() => {
+      const todo = todos.find(t => t.id === id);
+      if (todo && todo.completed) logActivity(-3);
+      
       if (activeSubTask && todos.find(t => t.id === id)?.subTasks.some(st => st.id === activeSubTask.subTaskId)) {
         setActiveSubTask(null);
       }
@@ -179,6 +205,7 @@ function App() {
           subTasks: todo.subTasks.map(st => {
             if (st.id === subTaskId) {
               const newCompleted = !st.completed;
+              logActivity(newCompleted ? 1 : -1);
               if (newCompleted && activeSubTask?.subTaskId === subTaskId) {
                 setActiveSubTask(null);
               }
@@ -196,6 +223,11 @@ function App() {
   const deleteSubTask = (todoId, subTaskId) => {
     saveHistory();
     audio.playCrumple();
+    
+    const todo = todos.find(t => t.id === todoId);
+    const subTask = todo?.subTasks.find(st => st.id === subTaskId);
+    if (subTask && subTask.completed) logActivity(-1);
+
     if (activeSubTask?.subTaskId === subTaskId) {
       setActiveSubTask(null);
     }
@@ -246,6 +278,42 @@ function App() {
     return subTask?.text || null;
   };
 
+  const calculateStreak = () => {
+    const dates = Object.keys(activityLog).filter(d => activityLog[d] > 0).sort().reverse();
+    if (dates.length === 0) return 0;
+
+    let streak = 0;
+    let checkDate = new Date();
+    
+    // Check if today or yesterday has activity to start/continue streak
+    const todayStr = checkDate.toLocaleDateString('en-CA');
+    checkDate.setDate(checkDate.getDate() - 1);
+    const yesterdayStr = checkDate.toLocaleDateString('en-CA');
+
+    if (activityLog[todayStr] > 0) {
+      streak = 1;
+      checkDate = new Date();
+    } else if (activityLog[yesterdayStr] > 0) {
+      streak = 0; // Streak hasn't died yet, but today isn't counted yet
+      checkDate = new Date();
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+      return 0;
+    }
+
+    // Traverse backwards
+    while (true) {
+      checkDate.setDate(checkDate.getDate() - 1);
+      const dStr = checkDate.toLocaleDateString('en-CA');
+      if (activityLog[dStr] > 0) {
+        streak++;
+      } else {
+        break;
+      }
+    }
+    return streak;
+  };
+
   const selectedTodo = todos.find(t => t.id === selectedTodoId);
 
   return (
@@ -280,7 +348,16 @@ function App() {
           )}
         </div>
         <div className="right-segment">
-          <PaperCalendar />
+          <div className="streak-display" style={{ 
+            textAlign: 'center', 
+            fontSize: '1.2em', 
+            fontWeight: 'bold', 
+            marginBottom: '10px',
+            color: '#444'
+          }}>
+            🔥 {calculateStreak()} Day Streak
+          </div>
+          <PaperCalendar activityLog={activityLog} />
           <PomodoroTimer activeSubTaskName={getActiveSubTaskName()} />
         </div>
       </div>

@@ -1,6 +1,6 @@
 ---
-id: sentient-epic
-title: [Epic] Sentient Workspace Protocol
+id: heatmap-epic
+title: [Epic] Graphite Heatmap & Streaks Protocol
 status: Backlog
 priority: High
 project: project
@@ -9,14 +9,14 @@ updated: 2026-01-18
 links:
   - url: ../../prd.md
     title: PRD
-labels: [core, audio, ux]
+labels: [core, analytics, ui]
 assignee: Pickle Rick
 ---
 
 # Description
 
 ## Problem to solve
-The application lacks physical presence and responsiveness. High-level focus requires sensory feedback and keyboard efficiency.
+Users lack a long-term visual sense of accomplishment. We need to turn their completions into data points that motivate continued effort.
 
 ## Solution
-Implement a 'Sentient Workspace' with synthesized audio, temporal safety (undo), and keyboard-first navigation.
+Implement a GitHub-style heatmap on the calendar using graphite intensities and track daily streaks.

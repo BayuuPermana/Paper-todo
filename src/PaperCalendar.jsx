@@ -1,6 +1,6 @@
 import React from 'react';
 
-function PaperCalendar() {
+function PaperCalendar({ activityLog }) {
   const today = new Date();
   const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
@@ -24,6 +24,29 @@ function PaperCalendar() {
   }
 
   const dayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+
+  const getIntensityColor = (day) => {
+    if (!day || !activityLog) return 'transparent';
+    
+    // Create date string in local YYYY-MM-DD format
+    const date = new Date(currentYear, currentMonth, day);
+    const dateStr = date.toLocaleDateString('en-CA');
+    const pts = activityLog[dateStr] || 0;
+
+    if (pts === 0) return 'transparent';
+    if (pts < 3) return '#eee'; // Light graphite
+    if (pts < 6) return '#ccc'; // Medium graphite
+    if (pts < 10) return '#888'; // Dark graphite
+    return '#333'; // Heavy graphite (Solenya tier)
+  };
+
+  const getTextColor = (day) => {
+    if (!day || !activityLog) return 'inherit';
+    const date = new Date(currentYear, currentMonth, day);
+    const dateStr = date.toLocaleDateString('en-CA');
+    const pts = activityLog[dateStr] || 0;
+    return pts >= 10 ? '#fff' : 'inherit';
+  };
 
   return (
     <div className="paper-calendar" style={{
@@ -51,18 +74,24 @@ function PaperCalendar() {
           </div>
         ))}
         
-        {days.map((day, index) => (
-          <div key={index} style={{
-            padding: '5px 0',
-            backgroundColor: day === currentDate ? '#fff9c4' : 'transparent',
-            borderRadius: day === currentDate ? '50%' : '0',
-            border: day === currentDate ? '1px dashed black' : 'none',
-            fontWeight: day === currentDate ? 'bold' : 'normal',
-            color: day === null ? 'transparent' : 'inherit'
-          }}>
-            {day || ''}
-          </div>
-        ))}
+        {days.map((day, index) => {
+          const intensity = getIntensityColor(day);
+          const isToday = day === currentDate;
+          
+          return (
+            <div key={index} style={{
+              padding: '5px 0',
+              backgroundColor: intensity,
+              borderRadius: isToday ? '50%' : '2px',
+              border: isToday ? '1px dashed black' : 'none',
+              fontWeight: isToday ? 'bold' : 'normal',
+              color: day === null ? 'transparent' : getTextColor(day),
+              transition: 'background-color 0.3s ease'
+            }}>
+              {day || ''}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
