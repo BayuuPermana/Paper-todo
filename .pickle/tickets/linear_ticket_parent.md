@@ -1,6 +1,6 @@
 ---
-id: image-epic
-title: [Epic] Visual Evidence Protocol (Image Attachments)
+id: matrix-epic
+title: [Epic] Integrated Input Matrix (Unified UI)
 status: Backlog
 priority: High
 project: project
@@ -9,14 +9,14 @@ updated: 2026-01-18
 links:
   - url: ../../prd.md
     title: PRD
-labels: [core, ui, data]
+labels: [core, ui, polish]
 assignee: Pickle Rick
 ---
 
 # Description
 
 ## Problem to solve
-Tasks are currently text-only, lacking visual context. Users need a way to attach images to projects without exceeding storage limits.
+Input areas have disparate buttons and borders, creating visual clutter and inconsistent interaction patterns.
 
 ## Solution
-Implement a visual attachment system with client-side compression and tactile 'Paper' styling.
+Implement a unified 'Matrix' bar that integrates image attachment and submission buttons directly into the input field's visual container.

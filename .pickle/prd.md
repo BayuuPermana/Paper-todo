@@ -1,57 +1,54 @@
-# Visual Evidence Protocol PRD
+# Integrated Input Matrix PRD
 
 ## HR Eng
 
-| Visual Evidence Protocol PRD |  | Summary: Enhancing 'Paper-todo' with image attachment capabilities for tasks. Includes God Mode canvas compression, base64 storage, and tactile 'tape' aesthetic for the UI. |
+| Integrated Input PRD |  | Summary: Refactoring task and subtask input areas into a unified, high-performance 'Matrix' bar where action buttons are integrated directly into the input container. |
 | :---- | :---- | :---- |
 | **Author**: Pickle Rick **Contributors**: Morty **Intended audience**: Engineering | **Status**: Draft **Created**: 2026-01-18 | **Visibility**: Public |
 
 ## Introduction
-A purely text-based workspace is for people with no imagination. This protocol introduces visual data ingestion, allowing users to attach a single image to any task. The image will be processed for efficiency and displayed with physical presence (tape textures).
+The current input areas have disparate buttons that create visual friction. This protocol introduces a 'Unified Bar' architecture where image attachment and submission actions are visually merged into the input field itself, creating a single, tactile 'Matrix'.
 
 ## Problem Statement
-**Current Process**: Tasks are text-only.
-**Primary Users**: Visual thinkers and people who need to remember what things look like.
-**Pain Points**: Lack of visual context. Need to leave the app to view related imagery.
-**Importance**: Visual cues significantly increase memory recall and "flow" efficiency.
+**Current Process**: Input fields and buttons are adjacent but separate elements.
+**Primary Users**: People who appreciate geometric precision and visual hygiene.
+**Pain Points**: Visual clutter from multiple borders and spacing gaps. Non-optimal submission symbol.
+**Importance**: A professional workspace requires a high signal-to-noise ratio.
 
 ## Objective & Scope
-**Objective**: Implement image upload, compression, and display for tasks.
-**Ideal Outcome**: User attaches an image while creating a task. A small preview appears in the sidebar (expand on hover), and a large "taped" version appears in the main workspace.
+**Objective**: Implement a unified input bar for tasks and subtasks.
+**Ideal Outcome**: A single border-encased container housing the [+] button, the text input, and the [»] submission button.
 
 ### In-scope or Goals
-- **Image Ingestor**: File input in `AddTodo` component.
-- **God Mode Compression**: Use `HTMLCanvasElement` to resize images to < 400px before storage.
-- **Base64 Storage**: Store image data directly in the `todos` array.
-- **Tape Aesthetic**: CSS-styled 'tape' overlays for attached images.
-- **Sidebar Hover Preview**: CSS-driven thumbnail expansion.
+- **Unified Container**: Flexbox-based wrapper with 'Paper' border.
+- **Integrated Buttons**: Internal buttons with no external borders, appearing as part of the bar.
+- **Symbolic Submission**: Replace '->' with '»' (Double Chevron).
+- **Responsive Integrity**: Ensure the bar remains horizontal on all viewports.
 
 ### Not-in-scope or Non-Goals
-- Multiple images per task.
-- Image editing (cropping, filters).
-- Drag-and-drop file upload (kept to standard file input for MVP).
+- Changing the underlying submission logic.
+- Adding multi-line support.
 
 ## Product Requirements
 
 ### Critical User Journeys (CUJs)
-1. **The Visual Capture**: User clicks the 'image' icon in the sidebar, picks a photo of a schematics diagram. They add the task. A tiny thumbnail appears. They hover, it pops up. They click the task, and the schematic is 'taped' to the main paper.
-2. **The Space Saver**: User uploads a 5MB raw photo. The system silently crushes it into a 20KB base64 string using my superior math.
+1. **The Rapid Entry**: User clicks into the integrated bar. They see the [+] on the left and [»] on the right. They type their genius and hit [»]. It feels like one smooth operation.
+2. **The Mobile Specialist**: User on a phone sees the same unified bar, perfectly horizontal, no awkward stacking.
 
 ### Functional Requirements
 
 | Priority | Requirement | User Story |
 | :---- | :---- | :---- |
-| P0 | Canvas Compression | As a system, I want to downscale images to save localStorage space. |
-| P0 | Base64 Storage | As a system, I want to store images as strings in the existing data model. |
-| P1 | Tape Aesthetic | As a user, I want images to look like they are taped to the paper. |
-| P1 | Sidebar Hover | As a user, I want to see a larger preview by hovering over the sidebar icon. |
+| P0 | Unified Border Container | As a user, I want the input and buttons to look like one piece of paper. |
+| P0 | Symbolic Submit (») | As a user, I want a precise, professional symbol for submission. |
+| P1 | Horizontal Stability | As a mobile user, I want the bar to stay wide and organized. |
 
 ## Assumptions
-- `localStorage` limit is ~5MB. Compression must be aggressive (e.g., JPEG 0.7 quality).
-- Modern browser support for Canvas and FileReader.
+- The 'Paper' aesthetic (border-radius, black borders) must be consistent.
+- Modern flexbox support.
 
 ## Risks & Mitigations
-- **Risk**: LocalStorage overflow. -> **Mitigation**: Strict dimension capping (max 400px) and quality reduction.
+- **Risk**: Input field being too narrow on mobile. -> **Mitigation**: Use `flex-grow: 1` and minimal button padding.
 
 ## Tradeoff
-- **Quality vs. Space**: We sacrifice high-res detail for the convenience of text-based persistence.
+- **Separation vs. Unity**: We trade distinct hit-areas for a cleaner, more modern 'Stationery' feel.

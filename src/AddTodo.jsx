@@ -33,63 +33,30 @@ function AddTodo({ onAdd }) {
 
   return (
     <div className="add-todo-container" style={{ marginBottom: '20px' }}>
-      <form onSubmit={handleSubmit} className="add-todo-form" style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        gap: '10px',
-        borderBottom: 'none' /* We will use container styling */
-      }}>
-        <input
-          type="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="New Objective..."
-          aria-label="New task description"
-          style={{
-            width: '100%',
-            padding: '10px',
-            border: '2px solid black',
-            borderRadius: '5px',
-            fontFamily: 'inherit',
-            fontSize: '1em',
-            boxSizing: 'border-box'
-          }}
-        />
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <form onSubmit={handleSubmit}>
+        <div className="input-matrix">
           <button 
             type="button" 
+            className="matrix-btn matrix-btn-left"
             onClick={() => fileInputRef.current.click()}
-            style={{ 
-              background: '#eee', 
-              border: '2px solid black', 
-              borderRadius: '5px',
-              cursor: 'pointer', 
-              fontSize: '1.2em',
-              padding: '5px 10px',
-              opacity: image ? 1 : 0.6,
-              boxShadow: '2px 2px 0px black',
-              transition: 'all 0.1s',
-              fontWeight: 'bold'
-            }}
+            style={{ opacity: image ? 1 : 0.4 }}
             title={image ? 'Image attached' : 'Attach image'}
           >
             +
           </button>
+          <input
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="New Objective..."
+            aria-label="New task description"
+          />
           <button 
             type="submit" 
+            className="matrix-btn matrix-btn-right"
             disabled={isProcessing}
-            style={{
-              padding: '5px 20px',
-              backgroundColor: '#fff',
-              border: '2px solid black',
-              borderRadius: '5px',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              boxShadow: '2px 2px 0px black',
-              fontSize: '1.2em'
-            }}
           >
-            {isProcessing ? '...' : '->'}
+            {isProcessing ? '...' : '»'}
           </button>
         </div>
         <input 
@@ -104,7 +71,8 @@ function AddTodo({ onAdd }) {
             fontSize: '0.7em', 
             color: '#2e7d32',
             fontWeight: 'bold',
-            textAlign: 'right'
+            textAlign: 'right',
+            marginTop: '5px'
           }}>
             ✓ Visual Attached
           </div>

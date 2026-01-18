@@ -40,7 +40,7 @@ describe('App', () => {
   it('adds a new todo with an empty subTasks array', () => {
     render(<App />);
     const input = screen.getByPlaceholderText('New Objective...');
-    const addButton = screen.getByText('->');
+    const addButton = screen.getByText('»');
 
     fireEvent.change(input, { target: { value: 'New Task' } });
     fireEvent.click(addButton);
@@ -72,7 +72,7 @@ describe('App', () => {
     // If we want to guarantee structure, we should verify that.
     
     const input = screen.getByPlaceholderText('New Objective...');
-    const addButton = screen.getByText('->');
+    const addButton = screen.getByText('»');
     fireEvent.change(input, { target: { value: 'Trigger Update' } });
     fireEvent.click(addButton);
 
@@ -89,7 +89,7 @@ describe('App', () => {
     render(<App />);
     // Add main task
     const input = screen.getByPlaceholderText('New Objective...');
-    const addButton = screen.getByText('->');
+    const addButton = screen.getByText('»');
     fireEvent.change(input, { target: { value: 'Main Task' } });
     fireEvent.click(addButton);
 
@@ -107,7 +107,7 @@ describe('App', () => {
     
     // Assume it shows an input or uses window.prompt (let's avoid prompt)
     // Let's assume an input appears.
-    const subTaskInput = screen.getByPlaceholderText('New step');
+    const subTaskInput = screen.getByPlaceholderText('New step...');
     fireEvent.change(subTaskInput, { target: { value: 'First Step' } });
     fireEvent.submit(subTaskInput);
 

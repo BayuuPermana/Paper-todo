@@ -129,46 +129,31 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
           ))}
           
           {isAddingSubTask && (
-            <form onSubmit={handleAddSubTask} className="add-subtask-form" style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-              <input
-                type="text"
-                value={subTaskText}
-                onChange={(e) => setSubTaskText(e.target.value)}
-                placeholder="New step"
-                autoFocus
-                onBlur={() => !subTaskText && !subTaskImage && setIsAddingSubTask(false)}
-                style={{ width: '100%', marginBottom: '5px' }}
-              />
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <form onSubmit={handleAddSubTask} className="add-subtask-form" style={{ marginTop: '10px' }}>
+              <div className="input-matrix">
                 <button 
                   type="button" 
+                  className="matrix-btn matrix-btn-left"
                   onClick={() => fileInputRef.current.click()}
-                  style={{ 
-                    background: 'none', 
-                    border: 'none', 
-                    cursor: 'pointer', 
-                    fontSize: '1.2em',
-                    opacity: subTaskImage ? 1 : 0.4,
-                    fontWeight: 'bold'
-                  }}
+                  style={{ opacity: subTaskImage ? 1 : 0.4 }}
                   title={subTaskImage ? 'Image attached' : 'Attach image'}
                 >
                   +
                 </button>
+                <input
+                  type="text"
+                  value={subTaskText}
+                  onChange={(e) => setSubTaskText(e.target.value)}
+                  placeholder="New step..."
+                  autoFocus
+                  onBlur={() => !subTaskText && !subTaskImage && setIsAddingSubTask(false)}
+                />
                 <button 
                   type="submit" 
+                  className="matrix-btn matrix-btn-right"
                   disabled={isProcessing}
-                  style={{
-                    padding: '2px 10px',
-                    backgroundColor: '#fff',
-                    border: '1px solid black',
-                    borderRadius: '3px',
-                    fontSize: '1em',
-                    cursor: 'pointer',
-                    fontWeight: 'bold'
-                  }}
                 >
-                  {isProcessing ? '...' : '->'}
+                  {isProcessing ? '...' : '»'}
                 </button>
               </div>
               <input 
@@ -179,7 +164,7 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
                 accept="image/*"
               />
               {subTaskImage && (
-                <div style={{ fontSize: '0.6em', color: '#2e7d32', textAlign: 'right' }}>
+                <div style={{ fontSize: '0.6em', color: '#2e7d32', textAlign: 'right', marginTop: '5px' }}>
                   ✓ Image Attached
                 </div>
               )}
