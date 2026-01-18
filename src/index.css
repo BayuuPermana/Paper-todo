@@ -3,7 +3,8 @@ body {
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
       background-color: #f0f2f5; /* Softer background for body */
       font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif; /* Extended font stack */
       color: #333;
@@ -14,6 +15,7 @@ body {
     .paper-container {
       width: 95%;
       max-width: 1200px;
+      height: calc(100vh - 100px);
       background-color: #fff;
       box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
       padding: 30px;
@@ -25,10 +27,14 @@ body {
       grid-template-columns: 2fr 1fr;
       gap: 30px;
       align-items: start;
+      box-sizing: border-box;
     }
 
     .left-segment {
       min-width: 0;
+      height: 100%;
+      overflow-y: auto;
+      padding-right: 15px;
     }
 
     .right-segment {
@@ -37,12 +43,26 @@ body {
       gap: 20px;
       border-left: 2px dashed #ccc;
       padding-left: 30px;
+      height: 100%;
     }
 
     @media (max-width: 1024px) {
+      body {
+        overflow: auto;
+        height: auto;
+      }
+
       .paper-container {
         grid-template-columns: 1fr;
         max-width: 600px;
+        height: auto;
+        overflow: visible;
+      }
+
+      .left-segment {
+        height: auto;
+        overflow: visible;
+        padding-right: 0;
       }
 
       .right-segment {
@@ -50,6 +70,7 @@ body {
         border-top: 2px dashed #ccc;
         padding-left: 0;
         padding-top: 30px;
+        height: auto;
       }
     }
 
