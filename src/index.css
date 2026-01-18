@@ -412,42 +412,6 @@ body {
       display: block;
     }
 
-    .add-todo-form {
-      display: flex;
-      margin-bottom: 30px;
-      border-bottom: 2px solid #333;
-    }
-
-    .add-todo-form input[type="text"] {
-      flex-grow: 1;
-      padding: 10px;
-      border: none;
-      background-color: transparent;
-      font-size: 1.2em;
-      font-family: inherit;
-      outline: none;
-    }
-    
-    .add-todo-form input[type="text"]::placeholder {
-      color: #aaa;
-      font-style: italic;
-    }
-
-    .add-todo-form button {
-      background-color: transparent;
-      color: #333;
-      border: none;
-      padding: 10px 20px;
-      cursor: pointer;
-      font-size: 1.2em;
-      font-weight: bold;
-      transition: transform 0.1s;
-    }
-    
-    .add-todo-form button:hover {
-       transform: scale(1.1);
-    }
-
     @media (max-width: 600px) {
       .paper-container {
         width: 95%;

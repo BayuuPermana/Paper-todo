@@ -32,54 +32,83 @@ function AddTodo({ onAdd }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="add-todo-form" style={{ position: 'relative' }}>
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Add a new task"
-        aria-label="New task description"
-      />
-      <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-        <button 
-          type="button" 
-          onClick={() => fileInputRef.current.click()}
-          style={{ 
-            background: 'none', 
-            border: 'none', 
-            cursor: 'pointer', 
-            fontSize: '1.2em',
-            opacity: image ? 1 : 0.4,
-            filter: image ? 'none' : 'grayscale(100%)'
+    <div className="add-todo-container" style={{ marginBottom: '20px' }}>
+      <form onSubmit={handleSubmit} className="add-todo-form" style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: '10px',
+        borderBottom: 'none' /* We will use container styling */
+      }}>
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="New Objective..."
+          aria-label="New task description"
+          style={{
+            width: '100%',
+            padding: '10px',
+            border: '2px solid black',
+            borderRadius: '5px',
+            fontFamily: 'inherit',
+            fontSize: '1em',
+            boxSizing: 'border-box'
           }}
-          title={image ? 'Image attached' : 'Attach image'}
-        >
-          🖼️
-        </button>
-        <button type="submit" disabled={isProcessing}>
-          {isProcessing ? '...' : 'Add'}
-        </button>
-      </div>
-      <input 
-        type="file" 
-        ref={fileInputRef} 
-        onChange={handleImageChange} 
-        style={{ display: 'none' }} 
-        accept="image/*"
-      />
-      {image && (
-        <div style={{ 
-          position: 'absolute', 
-          bottom: '-25px', 
-          left: '10px', 
-          fontSize: '0.7em', 
-          color: '#2e7d32',
-          fontWeight: 'bold'
-        }}>
-          ✓ Visual attached
+        />
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <button 
+            type="button" 
+            onClick={() => fileInputRef.current.click()}
+            style={{ 
+              background: '#eee', 
+              border: '2px solid black', 
+              borderRadius: '5px',
+              cursor: 'pointer', 
+              fontSize: '1.2em',
+              padding: '5px 10px',
+              opacity: image ? 1 : 0.6,
+              boxShadow: '2px 2px 0px black',
+              transition: 'all 0.1s'
+            }}
+            title={image ? 'Image attached' : 'Attach image'}
+          >
+            🖼️
+          </button>
+          <button 
+            type="submit" 
+            disabled={isProcessing}
+            style={{
+              padding: '5px 20px',
+              backgroundColor: '#fff',
+              border: '2px solid black',
+              borderRadius: '5px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              boxShadow: '2px 2px 0px black'
+            }}
+          >
+            {isProcessing ? '...' : 'Create'}
+          </button>
         </div>
-      )}
-    </form>
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          onChange={handleImageChange} 
+          style={{ display: 'none' }} 
+          accept="image/*"
+        />
+        {image && (
+          <div style={{ 
+            fontSize: '0.7em', 
+            color: '#2e7d32',
+            fontWeight: 'bold',
+            textAlign: 'right'
+          }}>
+            ✓ Visual Attached
+          </div>
+        )}
+      </form>
+    </div>
   );
 }
 
