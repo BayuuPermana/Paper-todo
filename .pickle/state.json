@@ -1,1 +1,1 @@
-{"active": true, "task": "Dual-Pane Desk Implementation", "iteration": 0, "max_iterations": 20, "step": "breakdown", "paused": true}
+{"active": true, "task": "Refactor layout: Move tasks to sidebar, Detail pane shows subtasks of selected task", "iteration": 0, "max_iterations": 20, "step": "prd"}

@@ -1,59 +1,56 @@
-# The Breathing Room Protocol (Vertical Margins) PRD
+# Archive Rack Protocol PRD
 
 ## HR Eng
 
-| The Breathing Room Protocol |  | Summary: Adding vertical whitespace to the main application container to improve visual hygiene and prevent layout cramping on scroll. |
+| Archive Rack Protocol PRD |  | Summary: Refactoring the application layout to separate high-level task management into a sidebar and detailed subtask execution into the main 'Paper' workspace. |
 | :---- | :---- | :---- |
-| **Author**: Pickle Rick **Contributors**: Morty (Passive Observer) **Intended audience**: Engineering | **Status**: Draft **Created**: 2026-01-18 | **Visibility**: Public |
+| **Author**: Pickle Rick **Contributors**: Morty **Intended audience**: Engineering | **Status**: Draft **Created**: 2026-01-18 | **Visibility**: Public |
 
 ## Introduction
-
-The current layout centers the `.paper-container` vertically. While aesthetically pleasing for empty states, it risks visual cramping when the todo list expands. We need to introduce explicit top and bottom margins to ensure the "Paper" aesthetic maintains a premium, un-cluttered feel.
+The current UI conflates task selection and subtask execution. This is "Jerry-level" clutter. By moving task management to a sidebar, we create a clear separation between 'Planning' (Sidebar) and 'Execution' (Main Workspace).
 
 ## Problem Statement
-
-**Current Process:** The app container relies solely on `body` flex alignment.
-**Primary Users:** Procrastinators who get stressed by cluttered UIs.
-**Pain Points:** Visual tension at the viewport edges.
-**Importance:** A "Paper" aesthetic requires whitespace. Without it, it's just a cramped digital note.
+**Current Process**: All tasks and their subtasks are displayed in a single list within the 2/3 segment.
+**Primary Users**: People with many complex projects who feel overwhelmed by a single long list.
+**Pain Points**: Visual noise from too many expanded tasks. Hard to focus on one project at a time.
+**Importance**: A "God-tier" workflow requires focus. One project at a time.
 
 ## Objective & Scope
-
-**Objective:** Enhance the visual layout by adding vertical breathing room.
-**Ideal Outcome:** The `.paper-container` has consistent top and bottom spacing, regardless of screen size or list length.
+**Objective**: Implement a task sidebar for project selection and an execution workspace for subtask management.
+**Ideal Outcome**: User selects a task from the sidebar; the main paper updates to show only that task's subtasks and the productivity tools.
 
 ### In-scope or Goals
-- Add CSS margins to `.paper-container`.
-- Ensure scrolling behavior is preserved (top content accessible).
+- New `TaskSidebar` component (outside the main paper container).
+- `selectedTodoId` state management in `App.jsx`.
+- Reposition `AddTodo` to the sidebar.
+- Refactor `paper-container` to show only subtasks of the selected todo.
+- Maintain responsive stacking (Sidebar -> Paper -> Tools).
 
 ### Not-in-scope or Non-Goals
-- Redesigning the entire layout.
-- Changing the background texture.
+- Multi-select tasks.
+- Drag-and-drop between tasks (only internal reordering).
 
 ## Product Requirements
 
 ### Critical User Journeys (CUJs)
-1. **The Scroll of Truth**: User adds 20 items. The list grows. The user scrolls. The top and bottom of the "paper" never touch the browser chrome. There is always a gap.
+1. **The Project Switch**: User has 5 tasks. They click "Build Death Star" in the sidebar. The main paper clears and shows "Step 1: Get Kyber Crystals."
+2. **The New Objective**: User types "Buy Milk" in the sidebar input. A new task appears in the sidebar. They click it to start adding steps in the main workspace.
 
 ### Functional Requirements
 
 | Priority | Requirement | User Story |
 | :---- | :---- | :---- |
-| P0 | Add vertical margin to `.paper-container` | As a user, I want the app to look "placed" on the desk, not glued to the screen. |
+| P0 | Task Sidebar | As a user, I want a dedicated area to see my projects. |
+| P0 | Task Selection | As a user, I want to click a task to focus on its subtasks. |
+| P1 | Sidebar Progress | As a user, I want to see (completed/total) steps in the sidebar. |
+| P1 | Integrated Add | As a user, I want to add new tasks directly from the sidebar. |
 
 ## Assumptions
-
-- The "main item" refers to the `.paper-container`.
+- There is always a "selected" task (or a placeholder if none selected).
+- The "Paper" aesthetic applies to the sidebar as well (maybe as a "rack" of papers).
 
 ## Risks & Mitigations
+- **Risk**: Losing the "Add Subtask" functionality. -> **Mitigation**: The main workspace remains the home for subtask CRUD.
 
-- **Risk**: Flexbox centering + overflow issues.
-- **Mitigation**: Switch body alignment or ensure margin handles overflow correctly.
-
-## Business Benefits/Impact/Metrics
-
-**Success Metrics:**
-
-| Metric | Current State | Future State | Impact |
-| :---- | :---- | :---- | :---- |
-| Vertical Margin | 0px | ~50px | Visual Cleaner-ness (Qualitative) |
+## Tradeoff
+- **Screen Space**: We're adding a 3rd column (or a persistent sidebar), which reduces the width of the individual segments.
