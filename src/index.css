@@ -8,26 +8,69 @@ body {
       background-color: #f0f2f5; /* Softer background for body */
       font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif; /* Extended font stack */
       color: #333;
-      padding: 50px 0;
       box-sizing: border-box;
     }
 
+    .app-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      width: 100vw;
+      height: 100vh;
+      padding: 20px;
+      gap: 20px;
+      box-sizing: border-box;
+    }
+
+    .task-sidebar {
+      background-color: #fff;
+      border: 3px solid black;
+      border-radius: 10px;
+      box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    .sidebar-list {
+      flex-grow: 1;
+      overflow-y: auto;
+      margin-top: 20px;
+      padding-right: 10px;
+    }
+
     .paper-container {
-      width: 95%;
-      max-width: 1200px;
-      height: calc(100vh - 100px);
       background-color: #fff;
       box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
       padding: 30px;
       border: 3px solid black;
       border-radius: 10px;
       position: relative;
-      margin: auto;
       display: grid;
       grid-template-columns: 2fr 1fr;
       gap: 30px;
       align-items: start;
       box-sizing: border-box;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    @media (max-width: 1200px) {
+      .app-layout {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+        height: auto;
+      }
+      
+      body {
+        overflow: auto;
+      }
+
+      .task-sidebar, .paper-container {
+        height: auto;
+      }
     }
 
     .left-segment {

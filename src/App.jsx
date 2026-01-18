@@ -5,6 +5,7 @@ import TodoList from './TodoList';
 import AddTodo from './AddTodo';
 import PomodoroTimer from './PomodoroTimer';
 import PaperCalendar from './PaperCalendar';
+import TaskSidebar from './TaskSidebar';
 
 const STORAGE_KEY = 'paper-todos';
 
@@ -19,11 +20,35 @@ function App() {
     }));
   });
 
+  const [selectedTodoId, setSelectedTodoId] = useState(() => {
+    return localStorage.getItem('paper-selected-todo') || null;
+  });
+
   const [activeSubTask, setActiveSubTask] = useState(null);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
   }, [todos]);
+
+  useEffect(() => {
+    if (selectedTodoId) {
+      localStorage.setItem('paper-selected-todo', selectedTodoId);
+    } else {
+      localStorage.removeItem('paper-selected-todo');
+    }
+  }, [selectedTodoId]);
+
+  // Fallback selection: pick the first one if current selection is invalid or null
+  useEffect(() => {
+    if (todos.length > 0) {
+      const exists = todos.find(t => t.id === selectedTodoId);
+      if (!exists) {
+        setSelectedTodoId(todos[0].id);
+      }
+    } else {
+      setSelectedTodoId(null);
+    }
+  }, [todos, selectedTodoId]);
 
   const handleDragEnd = (result) => {
     if (!result.destination) return;
@@ -36,8 +61,10 @@ function App() {
   };
 
   const addTodo = (text) => {
-    const newTodo = { id: uuidv4(), text, completed: false, subTasks: [] };
+    const newId = uuidv4();
+    const newTodo = { id: newId, text, completed: false, subTasks: [] };
     setTodos([...todos, newTodo]);
+    setSelectedTodoId(newId);
   };
 
   const toggleComplete = (id) => {
@@ -52,7 +79,11 @@ function App() {
     if (activeSubTask && todos.find(t => t.id === id)?.subTasks.some(st => st.id === activeSubTask.subTaskId)) {
       setActiveSubTask(null);
     }
-    setTodos(todos.filter((todo) => todo.id !== id));
+    const newTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(newTodos);
+    if (id === selectedTodoId) {
+      setSelectedTodoId(newTodos.length > 0 ? newTodos[0].id : null);
+    }
   };
 
   const addSubTask = (todoId, text) => {
@@ -137,28 +168,43 @@ function App() {
     return subTask?.text || null;
   };
 
+  const selectedTodo = todos.find(t => t.id === selectedTodoId);
+
   return (
-    <div className="paper-container">
-      <div className="left-segment">
-        <AddTodo onAdd={addTodo} />
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <TodoList
-            todos={todos}
-            onToggleComplete={toggleComplete}
-            onDelete={deleteTodo}
-            onAddSubTask={addSubTask}
-            onToggleSubTask={toggleSubTask}
-            onDeleteSubTask={deleteSubTask}
-            onSubTaskFocus={startFocus}
-            activeSubTaskId={activeSubTask?.subTaskId}
-            onEditTodo={editTodo}
-            onEditSubTask={editSubTask}
-          />
-        </DragDropContext>
-      </div>
-      <div className="right-segment">
-        <PaperCalendar />
-        <PomodoroTimer activeSubTaskName={getActiveSubTaskName()} />
+    <div className="app-layout">
+      <TaskSidebar
+        todos={todos}
+        selectedTodoId={selectedTodoId}
+        onSelectTodo={setSelectedTodoId}
+        onAddTodo={addTodo}
+      />
+      <div className="paper-container">
+        <div className="left-segment">
+          {selectedTodo ? (
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <TodoList
+                todos={[selectedTodo]}
+                onToggleComplete={toggleComplete}
+                onDelete={deleteTodo}
+                onAddSubTask={addSubTask}
+                onToggleSubTask={toggleSubTask}
+                onDeleteSubTask={deleteSubTask}
+                onSubTaskFocus={startFocus}
+                activeSubTaskId={activeSubTask?.subTaskId}
+                onEditTodo={editTodo}
+                onEditSubTask={editSubTask}
+              />
+            </DragDropContext>
+          ) : (
+            <div style={{ textAlign: 'center', padding: '50px', color: '#aaa' }}>
+              Select or add a task from the rack
+            </div>
+          )}
+        </div>
+        <div className="right-segment">
+          <PaperCalendar />
+          <PomodoroTimer activeSubTaskName={getActiveSubTaskName()} />
+        </div>
       </div>
     </div>
   );
