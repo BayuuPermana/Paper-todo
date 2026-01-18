@@ -229,28 +229,28 @@ body {
       left: 0;
       top: 50%;
       width: 100%;
-      height: 30px; /* Taller for the new jagged path */
+      height: 30px;
       background-image: url('./assets/scribble.svg');
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-      background-position: center;
+      background-repeat: repeat-x; /* Tile it so it never stretches */
+      background-size: 200px 100%; /* Match the SVG native width */
+      background-position: left center;
       transform: translateY(-50%);
       pointer-events: none;
-      animation: scribble-anim 0.15s ease-out forwards;
+      animation: scribble-anim 0.2s ease-out forwards;
       opacity: 0.95;
     }
 
     @keyframes scribble-anim {
       0% {
-        width: 0;
+        clip-path: inset(0 100% 0 0);
         transform: translateY(-50%) rotate(0deg);
       }
       50% {
-        transform: translateY(-52%) rotate(-1deg) scaleY(1.1);
+        transform: translateY(-52%) rotate(-0.5deg) scaleY(1.1);
       }
       100% {
-        width: 100%;
-        transform: translateY(-50%) rotate(0.5deg) scaleY(1);
+        clip-path: inset(0 0 0 0);
+        transform: translateY(-50%) rotate(0.2deg) scaleY(1);
       }
     }
 
