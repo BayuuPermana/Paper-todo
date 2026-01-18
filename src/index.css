@@ -260,6 +260,31 @@ body {
       color: #d32f2f; /* Red on hover */
     }
 
+    /* Clean Desk Protocol: Hover Reveal for Subtasks */
+    .sub-task-item .todo-actions button {
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+
+    .sub-task-item:hover .todo-actions button {
+      opacity: 0.6;
+    }
+
+    .sub-task-item .todo-actions button:hover {
+      opacity: 1;
+    }
+
+    .sub-task-item .todo-actions button.persistent-visible {
+      opacity: 1;
+    }
+
+    @media (max-width: 1024px) {
+      /* Keep buttons visible on touch devices */
+      .sub-task-item .todo-actions button {
+        opacity: 0.6;
+      }
+    }
+
     .add-todo-form {
       display: flex;
       margin-bottom: 30px;

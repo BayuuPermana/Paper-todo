@@ -73,20 +73,20 @@ function SubTaskItem({ subTask, onToggle, onDelete, onFocus, isFocused, onEdit }
         <button
           onClick={() => setIsEditing(true)}
           title="Edit subtask"
-          style={{ background: 'none', border: 'none', cursor: 'pointer', opacity: 0.6, fontSize: '0.9em', marginRight: '5px' }}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.9em', marginRight: '5px' }}
         >
           ✏️
         </button>
         <button
           onClick={() => onFocus(subTask.id)}
           title="Focus on this task"
+          className={isFocused ? 'persistent-visible' : ''}
           style={{ 
             background: 'none', 
             border: 'none', 
             cursor: 'pointer', 
             fontSize: '1.1em',
-            marginRight: '5px',
-            opacity: isFocused ? 1 : 0.3
+            marginRight: '5px'
           }}
         >
           🎯
