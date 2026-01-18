@@ -39,6 +39,12 @@ body {
       overflow-y: auto;
       margin-top: 20px;
       padding-right: 10px;
+      min-height: 100px;
+    }
+
+    .sub-tasks-list {
+      animation: fadeIn 0.3s ease-out;
+      min-height: 50px;
     }
 
     .paper-container {

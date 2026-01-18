@@ -56,17 +56,25 @@ function SubTaskItem({ subTask, onToggle, onDelete, onFocus, isFocused, onEdit }
             />
           </form>
         ) : (
-          <button
-            type="button"
+          <span
+            role="button"
             className={`todo-text ${subTask.completed ? 'completed' : ''}`}
             onClick={() => onToggle(subTask.id)}
             aria-label={`Mark "${subTask.text}" as ${
               subTask.completed ? 'incomplete' : 'complete'
             }`}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', width: 'auto' }}
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              cursor: 'pointer', 
+              textAlign: 'left', 
+              width: 'auto',
+              display: 'inline-block',
+              userSelect: 'none'
+            }}
           >
             {subTask.text}
-          </button>
+          </span>
         )}
       </div>
       
