@@ -68,11 +68,12 @@ function AddTodo({ onAdd }) {
               padding: '5px 10px',
               opacity: image ? 1 : 0.6,
               boxShadow: '2px 2px 0px black',
-              transition: 'all 0.1s'
+              transition: 'all 0.1s',
+              fontWeight: 'bold'
             }}
             title={image ? 'Image attached' : 'Attach image'}
           >
-            🖼️
+            +
           </button>
           <button 
             type="submit" 
@@ -84,10 +85,11 @@ function AddTodo({ onAdd }) {
               borderRadius: '5px',
               fontWeight: 'bold',
               cursor: 'pointer',
-              boxShadow: '2px 2px 0px black'
+              boxShadow: '2px 2px 0px black',
+              fontSize: '1.2em'
             }}
           >
-            {isProcessing ? '...' : 'Create'}
+            {isProcessing ? '...' : '->'}
           </button>
         </div>
         <input 

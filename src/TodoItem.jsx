@@ -147,12 +147,13 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
                     background: 'none', 
                     border: 'none', 
                     cursor: 'pointer', 
-                    fontSize: '1em',
-                    opacity: subTaskImage ? 1 : 0.4
+                    fontSize: '1.2em',
+                    opacity: subTaskImage ? 1 : 0.4,
+                    fontWeight: 'bold'
                   }}
                   title={subTaskImage ? 'Image attached' : 'Attach image'}
                 >
-                  🖼️
+                  +
                 </button>
                 <button 
                   type="submit" 
@@ -162,11 +163,12 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
                     backgroundColor: '#fff',
                     border: '1px solid black',
                     borderRadius: '3px',
-                    fontSize: '0.8em',
-                    cursor: 'pointer'
+                    fontSize: '1em',
+                    cursor: 'pointer',
+                    fontWeight: 'bold'
                   }}
                 >
-                  {isProcessing ? '...' : 'Add Step'}
+                  {isProcessing ? '...' : '->'}
                 </button>
               </div>
               <input 
