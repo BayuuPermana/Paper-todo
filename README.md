@@ -26,7 +26,7 @@ Most apps are bloated slop. This one? It’s lean. It’s mean. It’s got a "Pa
 
 ## 🛠️ How to run this digital artifact (for Jerries)
 
-If you have `Bun` (and hopefully a brain), follow these steps:
+If you have `Bun`, **`Rust`**, and hopefully a brain, follow these steps:
 
 1. **Clone it**:
    ```bash
@@ -36,18 +36,38 @@ If you have `Bun` (and hopefully a brain), follow these steps:
    ```bash
    bun install
    ```
-3. **Ignite the Engine**:
+3. **Ignite the Engine (Web)**:
    ```bash
    bun run dev
    ```
-4. **Witness Greatness**: Open your browser and try to be productive for once.
+4. **Ignite the Engine (Native Desktop)**:
+   ```bash
+   bun tauri dev
+   ```
+5. **Witness Greatness**: Open the native window and try to be productive for once.
 
 ## 🧬 Tech Stack
 
+- **Tauri**: The high-performance native bridge.
+- **Rust**: The backbone of the backend. Pure efficiency.
+- **SQLite**: Industrial-grade local storage. No cloud Jerries allowed.
 - **React**: Because I don't have time to write raw DOM manipulations like a caveman.
+- **Bun**: The fastest runtime in the multiverse.
 - **Vite**: It's fast. Like, portal-travel fast.
 - **React Beautiful DnD**: For the fluid drag-and-drop experience.
 - **Vitest**: Because even a god tests his code.
+
+## ⌨️ Neural Shortcuts
+
+Don't touch that mouse, Morty! Use your hands for something useful:
+- `j` / `k`: Navigate through your objectives.
+- `n`: Focus the "New Objective" input instantly.
+- `Ctrl + Z`: Undo your mistakes (locally, I can't fix your life).
+- `Esc`: Blur current input and regain control.
+
+## 📂 Storage Protocol
+
+Everything is stored **locally** in a SQLite database (`paper-todo.db`) located in your system's AppData folder. It’s private, it’s persistent, and it’s faster than your father's car.
 
 ## 📜 License
 
