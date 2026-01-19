@@ -67,14 +67,15 @@ body {
     @media (max-width: 1200px) {
       .app-layout {
         grid-template-columns: 1fr;
-        height: 100vh;
-        padding: 60px 0 70px 0; /* Reduced space */
-        overflow: hidden;
+        height: auto;
+        min-height: 100vh;
+        padding: 60px 0 70px 0; /* Space for fixed header/footer */
+        overflow: visible;
         gap: 0;
       }
       
       body {
-        overflow: hidden;
+        overflow-y: auto;
       }
 
       .task-sidebar, .paper-container {
