@@ -20,8 +20,8 @@ Most apps are bloated slop. This one? It’s lean. It’s mean. It’s got a "Pa
 
 ### Mobile Intelligence
 <div align="center">
-  <img src="./Todo-mobile-a.png" width="45%" alt="Mobile Archive" />
   <img src="./Todo-mobile-B.png" width="45%" alt="Mobile Focus" />
+  <img src="./Todo-mobile-a.png" width="45%" alt="Mobile Archive" />
 </div>
 
 ## 🛠️ How to run this digital artifact (for Jerries)
