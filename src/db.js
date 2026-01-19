@@ -7,49 +7,55 @@ let db = null;
 export const initDb = async () => {
   if (db) return db;
 
-  const appDataDirPath = await appLocalDataDir();
-  const dbPath = await join(appDataDirPath, 'paper-todo.db');
-  
-  // Ensure the directory exists
-  const dirExists = await exists(appDataDirPath);
-  if (!dirExists) {
-    await mkdir(appDataDirPath, { recursive: true });
+  try {
+    const appDataDirPath = await appLocalDataDir();
+    const dbPath = await join(appDataDirPath, 'paper-todo.db');
+    console.log('Database Path:', dbPath); // Debug Log
+    
+    // Ensure the directory exists
+    const dirExists = await exists(appDataDirPath);
+    if (!dirExists) {
+      await mkdir(appDataDirPath, { recursive: true });
+    }
+
+    // We use the absolute path with the sqlite: prefix
+    db = await Database.load(`sqlite:${dbPath}`);
+    
+    // Create tables if they don't exist
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS todos (
+        id TEXT PRIMARY KEY,
+        text TEXT NOT NULL,
+        completed BOOLEAN NOT NULL DEFAULT 0,
+        image TEXT,
+        order_index INTEGER DEFAULT 0
+      );
+    `);
+
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS subtasks (
+        id TEXT PRIMARY KEY,
+        todo_id TEXT NOT NULL,
+        text TEXT NOT NULL,
+        completed BOOLEAN NOT NULL DEFAULT 0,
+        image TEXT,
+        order_index INTEGER DEFAULT 0,
+        FOREIGN KEY (todo_id) REFERENCES todos (id) ON DELETE CASCADE
+      );
+    `);
+
+    await db.execute(`
+      CREATE TABLE IF NOT EXISTS activity_log (
+        date TEXT PRIMARY KEY,
+        pts INTEGER DEFAULT 0
+      );
+    `);
+
+    return db;
+  } catch (err) {
+    console.error('Failed to initialize DB:', err);
+    throw err;
   }
-
-  // We use the absolute path with the sqlite: prefix
-  db = await Database.load(`sqlite:${dbPath}`);
-  
-  // Create tables if they don't exist
-  await db.execute(`
-    CREATE TABLE IF NOT EXISTS todos (
-      id TEXT PRIMARY KEY,
-      text TEXT NOT NULL,
-      completed BOOLEAN NOT NULL DEFAULT 0,
-      image TEXT,
-      order_index INTEGER DEFAULT 0
-    );
-  `);
-
-  await db.execute(`
-    CREATE TABLE IF NOT EXISTS subtasks (
-      id TEXT PRIMARY KEY,
-      todo_id TEXT NOT NULL,
-      text TEXT NOT NULL,
-      completed BOOLEAN NOT NULL DEFAULT 0,
-      image TEXT,
-      order_index INTEGER DEFAULT 0,
-      FOREIGN KEY (todo_id) REFERENCES todos (id) ON DELETE CASCADE
-    );
-  `);
-
-  await db.execute(`
-    CREATE TABLE IF NOT EXISTS activity_log (
-      date TEXT PRIMARY KEY,
-      pts INTEGER DEFAULT 0
-    );
-  `);
-
-  return db;
 };
 
 export const getTodos = async () => {
@@ -67,20 +73,25 @@ export const getTodos = async () => {
 };
 
 export const saveTodo = async (todo) => {
-  const conn = await initDb();
-  await conn.execute(
-    'INSERT OR REPLACE INTO todos (id, text, completed, image, order_index) VALUES ($1, $2, $3, $4, $5)',
-    [todo.id, todo.text, todo.completed ? 1 : 0, todo.image, todo.order_index || 0]
-  );
-
-  // Clear existing subtasks and re-insert
-  await conn.execute('DELETE FROM subtasks WHERE todo_id = $1', [todo.id]);
-  for (let i = 0; i < todo.subTasks.length; i++) {
-    const st = todo.subTasks[i];
+  try {
+    const conn = await initDb();
     await conn.execute(
-      'INSERT INTO subtasks (id, todo_id, text, completed, image, order_index) VALUES ($1, $2, $3, $4, $5, $6)',
-      [st.id, todo.id, st.text, st.completed ? 1 : 0, st.image, i]
+      'INSERT OR REPLACE INTO todos (id, text, completed, image, order_index) VALUES ($1, $2, $3, $4, $5)',
+      [todo.id, todo.text, todo.completed ? 1 : 0, todo.image, todo.order_index || 0]
     );
+
+    // Clear existing subtasks and re-insert
+    await conn.execute('DELETE FROM subtasks WHERE todo_id = $1', [todo.id]);
+    for (let i = 0; i < todo.subTasks.length; i++) {
+      const st = todo.subTasks[i];
+      await conn.execute(
+        'INSERT INTO subtasks (id, todo_id, text, completed, image, order_index) VALUES ($1, $2, $3, $4, $5, $6)',
+        [st.id, todo.id, st.text, st.completed ? 1 : 0, st.image, i]
+      );
+    }
+  } catch (err) {
+    console.error('Failed to save todo:', err);
+    throw err; // Propagate to App.jsx for alert
   }
 };
 

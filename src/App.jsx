@@ -25,6 +25,7 @@ function App() {
       await fn();
     } catch (err) {
       console.error("Save failed:", err);
+      alert("CRITICAL ERROR: Failed to save data! " + err.toString());
     } finally {
       setTimeout(() => setIsSaving(false), 800);
     }
