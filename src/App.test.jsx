@@ -116,8 +116,8 @@ describe('App', () => {
     // Toggle subtask
     fireEvent.click(screen.getByText('First Step'));
     // We expect it to have class 'completed' - checking class might be brittle if we change styling
-    // But SubTaskItem adds 'completed' class.
-    expect(screen.getByText('First Step')).toHaveClass('completed');
+    // But SubTaskItem adds 'completed' class to the parent container.
+    expect(screen.getByText('First Step').parentElement).toHaveClass('completed');
 
     // Delete subtask
     // Find delete button for subtask

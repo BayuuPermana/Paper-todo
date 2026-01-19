@@ -39,7 +39,7 @@ body {
       overflow-y: auto;
       overflow-x: hidden;
       margin-top: 20px;
-      padding-right: 5px;
+      padding-right: 15px; /* Increased for scrollbar gutter */
       min-height: 100px;
     }
 
@@ -302,9 +302,16 @@ body {
       padding: 5px 10px;
       width: 100%;
       position: relative;
+      overflow: visible; /* Restore for scribble */
+      display: flex;
+      align-items: center;
+    }
+
+    .text-content {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      flex: 1;
     }
 
     button.todo-text.completed {
@@ -312,7 +319,7 @@ body {
     }
 
     /* Scribble Effect - raw and aggressive */
-    button.todo-text.completed::after {
+    .todo-text.completed::after {
       content: '';
       position: absolute;
       left: 0;

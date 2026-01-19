@@ -73,7 +73,7 @@ function SubTaskItem({ subTask, onToggle, onDelete, onFocus, isFocused, onEdit }
               userSelect: 'none'
             }}
           >
-            {subTask.text}
+            <span className="text-content">{subTask.text}</span>
           </span>
         )}
       </div>

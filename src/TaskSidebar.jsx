@@ -76,7 +76,7 @@ function TaskSidebar({ todos, selectedTodoId, onSelectTodo, onAddTodo, className
                             />
                           )}
                           <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            <div style={{ fontWeight: 'bold', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{todo.text}</div>
+                            <div className="text-content" style={{ fontWeight: 'bold' }}>{todo.text}</div>
                             <div style={{ fontSize: '0.7em', color: '#666' }}>
                               {totalCount > 0 ? `(${completedCount}/${totalCount} steps)` : 'No steps'}
                             </div>

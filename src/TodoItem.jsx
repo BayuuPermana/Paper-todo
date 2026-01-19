@@ -82,7 +82,7 @@ function TodoItem({ todo, onToggleComplete, onDelete, onAddSubTask, onSubTaskTog
               todo.completed ? 'incomplete' : 'complete'
             }`}
           >
-            {todo.text}
+            <span className="text-content">{todo.text}</span>
             {totalSubTasks > 0 && (
               <span className="progress-indicator" style={{ fontSize: '0.7em', marginLeft: '10px', color: '#888' }}>
                 ({completedSubTasks}/{totalSubTasks} steps)
