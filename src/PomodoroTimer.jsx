@@ -86,6 +86,24 @@ function PomodoroTimer({ activeSubTaskName, onTaskComplete, variant = 'full' }) 
         }}>
           {formatTime(timeLeft)}
         </div>
+        <select 
+          value={selectedPreset} 
+          onChange={(e) => setSelectedPreset(Number(e.target.value))}
+          style={{
+            background: 'none',
+            border: '1px solid black',
+            borderRadius: '3px',
+            fontFamily: 'inherit',
+            fontSize: '0.8em',
+            padding: '2px',
+            cursor: 'pointer'
+          }}
+          title="Select Preset"
+        >
+          {PRESETS.map(p => (
+            <option key={p} value={p}>{p}m</option>
+          ))}
+        </select>
         <button 
           onClick={toggleTimer}
           disabled={isBurnedOut}
