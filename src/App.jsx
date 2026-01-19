@@ -2,51 +2,65 @@ import React, { useState, useEffect } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { v4 as uuidv4 } from 'uuid';
 import TodoList from './TodoList';
-import AddTodo from './AddTodo';
 import PomodoroTimer from './PomodoroTimer';
 import PaperCalendar from './PaperCalendar';
 import TaskSidebar from './TaskSidebar';
 import { audio } from './utils/GodAudio';
-
-const STORAGE_KEY = 'paper-todos';
-const LOG_KEY = 'paper-activity-log';
+import { getTodos, saveTodo, deleteTodoDb, getActivityLog, saveActivityLog } from './db';
 
 function App() {
-  const [todos, setTodos] = useState(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    const parsedTodos = saved ? JSON.parse(saved) : [];
-    // Migration: Ensure all todos have subTasks array
-    return parsedTodos.map(todo => ({
-      ...todo,
-      subTasks: todo.subTasks || []
-    }));
-  });
-
-  const [activityLog, setActivityLog] = useState(() => {
-    const saved = localStorage.getItem(LOG_KEY);
-    return saved ? JSON.parse(saved) : {};
-  });
-
-  const [selectedTodoId, setSelectedTodoId] = useState(() => {
-    return localStorage.getItem('paper-selected-todo') || null;
-  });
-
+  const [todos, setTodos] = useState([]);
+  const [activityLog, setActivityLog] = useState({});
+  const [selectedTodoId, setSelectedTodoId] = useState(null);
   const [activeTab, setActiveTab] = useState('archive'); // 'archive' or 'focus'
   const [activeSubTask, setActiveSubTask] = useState(null);
-  const [undoBuffer, setUndoBuffer] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Initial Data Load & Migration
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
-  }, [todos]);
+    const loadData = async () => {
+      try {
+        // 1. Migration from localStorage
+        const savedTodos = localStorage.getItem('paper-todos');
+        const savedLog = localStorage.getItem('paper-activity-log');
+        
+        if (savedTodos) {
+          const parsed = JSON.parse(savedTodos);
+          for (let i = 0; i < parsed.length; i++) {
+            await saveTodo({ ...parsed[i], order_index: i });
+          }
+          localStorage.removeItem('paper-todos');
+        }
 
-  useEffect(() => {
-    localStorage.setItem(LOG_KEY, JSON.stringify(activityLog));
-  }, [activityLog]);
+        if (savedLog) {
+          const parsed = JSON.parse(savedLog);
+          for (const date in parsed) {
+            await saveActivityLog(date, parsed[date]);
+          }
+          localStorage.removeItem('paper-activity-log');
+        }
+
+        // 2. Initial Selection from localStorage (keep for session)
+        const savedSelection = localStorage.getItem('paper-selected-todo');
+        if (savedSelection) setSelectedTodoId(savedSelection);
+
+        // 3. Load from DB
+        const dbTodos = await getTodos();
+        const dbLog = await getActivityLog();
+        setTodos(dbTodos);
+        setActivityLog(dbLog);
+      } catch (err) {
+        console.error('Failed to load data from DB:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadData();
+  }, []);
 
   useEffect(() => {
     if (selectedTodoId) {
       localStorage.setItem('paper-selected-todo', selectedTodoId);
-      // Auto-switch to focus tab on mobile when a project is selected
       if (window.innerWidth <= 1200) {
         setActiveTab('focus');
       }
@@ -55,35 +69,26 @@ function App() {
     }
   }, [selectedTodoId]);
 
-  // Fallback selection: pick the first one if current selection is invalid or null
+  // Fallback selection
   useEffect(() => {
-    if (todos.length > 0) {
+    if (!isLoading && todos.length > 0) {
       const exists = todos.find(t => t.id === selectedTodoId);
       if (!exists) {
         setSelectedTodoId(todos[0].id);
       }
-    } else {
+    } else if (!isLoading && todos.length === 0) {
       setSelectedTodoId(null);
     }
-  }, [todos, selectedTodoId]);
+  }, [todos, selectedTodoId, isLoading]);
 
   // Neural Shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Don't trigger shortcuts if user is typing in an input
       if (e.target.tagName === 'INPUT') {
         if (e.key === 'Escape') e.target.blur();
         return;
       }
 
-      // Undo: Ctrl+Z
-      if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
-        e.preventDefault();
-        handleUndo();
-        return;
-      }
-
-      // New Task: n
       if (e.key === 'n') {
         e.preventDefault();
         const input = document.querySelector('.add-todo-form input');
@@ -91,7 +96,6 @@ function App() {
         return;
       }
 
-      // Navigation: j/k
       if (e.key === 'j' || e.key === 'k') {
         e.preventDefault();
         const currentIndex = todos.findIndex(t => t.id === selectedTodoId);
@@ -108,42 +112,31 @@ function App() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [todos, selectedTodoId, undoBuffer]);
+  }, [todos, selectedTodoId]);
 
-  const saveHistory = () => {
-    setUndoBuffer(JSON.parse(JSON.stringify(todos)));
-  };
-
-  const logActivity = (pts) => {
+  const logActivity = async (pts) => {
     const today = new Date().toLocaleDateString('en-CA');
-    setActivityLog(prev => ({
-      ...prev,
-      [today]: Math.max(0, (prev[today] || 0) + pts)
-    }));
+    const newPts = Math.max(0, (activityLog[today] || 0) + pts);
+    setActivityLog(prev => ({ ...prev, [today]: newPts }));
+    await saveActivityLog(today, newPts);
   };
 
-  const handleUndo = () => {
-    if (undoBuffer) {
-      setTodos(undoBuffer);
-      setUndoBuffer(null);
-      audio.playRustle();
-    }
-  };
-
-  const handleDragEnd = (result) => {
+  const handleDragEnd = async (result) => {
     if (!result.destination) return;
     const { source, destination } = result;
 
-    saveHistory();
-
     if (source.droppableId === 'sidebar-todos') {
-      const items = Array.from(todos);
-      const [reorderedItem] = items.splice(source.index, 1);
-      items.splice(destination.index, 0, reorderedItem);
-      setTodos(items);
+      const newItems = Array.from(todos);
+      const [reorderedItem] = newItems.splice(source.index, 1);
+      newItems.splice(destination.index, 0, reorderedItem);
+      setTodos(newItems);
+      // Persist reorder
+      for (let i = 0; i < newItems.length; i++) {
+        await saveTodo({ ...newItems[i], order_index: i });
+      }
     } else if (source.droppableId.startsWith('subtasks-')) {
       const todoId = source.droppableId.replace('subtasks-', '');
-      setTodos(prev => prev.map(todo => {
+      const newTodos = todos.map(todo => {
         if (todo.id === todoId) {
           const newSubTasks = Array.from(todo.subTasks);
           const [reordered] = newSubTasks.splice(source.index, 1);
@@ -151,44 +144,50 @@ function App() {
           return { ...todo, subTasks: newSubTasks };
         }
         return todo;
-      }));
+      });
+      setTodos(newTodos);
+      const updatedTodo = newTodos.find(t => t.id === todoId);
+      await saveTodo(updatedTodo);
     }
   };
 
-  const addTodo = (text, image = null) => {
-    saveHistory();
-    const newId = uuidv4();
-    const newTodo = { id: newId, text, completed: false, subTasks: [], image };
-    setTodos([...todos, newTodo]);
-    setSelectedTodoId(newId);
+  const addTodo = async (text, image = null) => {
+    const newTodo = { 
+      id: uuidv4(), 
+      text, 
+      completed: false, 
+      subTasks: [], 
+      image,
+      order_index: todos.length
+    };
+    const newTodos = [...todos, newTodo];
+    setTodos(newTodos);
+    setSelectedTodoId(newTodo.id);
     audio.playPencil();
+    await saveTodo(newTodo);
   };
 
-  const toggleComplete = (id) => {
-    saveHistory();
-    setTodos(
-      todos.map((todo) => {
-        if (todo.id === id) {
-          const newCompleted = !todo.completed;
-          logActivity(newCompleted ? 3 : -3);
-          return { ...todo, completed: newCompleted };
-        }
-        return todo;
-      })
-    );
+  const toggleComplete = async (id) => {
+    const newTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        const newCompleted = !todo.completed;
+        logActivity(newCompleted ? 3 : -3);
+        return { ...todo, completed: newCompleted };
+      }
+      return todo;
+    });
+    setTodos(newTodos);
     audio.playPencil();
+    await saveTodo(newTodos.find(t => t.id === id));
   };
 
-  const deleteTodo = (id) => {
-    saveHistory();
+  const deleteTodo = async (id) => {
     audio.playCrumple();
-    
-    // Physical delay for animation
-    setTimeout(() => {
+    setTimeout(async () => {
       const todo = todos.find(t => t.id === id);
       if (todo && todo.completed) logActivity(-3);
       
-      if (activeSubTask && todos.find(t => t.id === id)?.subTasks.some(st => st.id === activeSubTask.subTaskId)) {
+      if (activeSubTask && todo?.subTasks.some(st => st.id === activeSubTask.subTaskId)) {
         setActiveSubTask(null);
       }
       const newTodos = todos.filter((todo) => todo.id !== id);
@@ -196,12 +195,12 @@ function App() {
       if (id === selectedTodoId) {
         setSelectedTodoId(newTodos.length > 0 ? newTodos[0].id : null);
       }
+      await deleteTodoDb(id);
     }, 400);
   };
 
-  const addSubTask = (todoId, text, image = null) => {
-    saveHistory();
-    setTodos(todos.map(todo => {
+  const addSubTask = async (todoId, text, image = null) => {
+    const newTodos = todos.map(todo => {
       if (todo.id === todoId) {
         return {
           ...todo,
@@ -212,13 +211,14 @@ function App() {
         };
       }
       return todo;
-    }));
+    });
+    setTodos(newTodos);
     audio.playPencil();
+    await saveTodo(newTodos.find(t => t.id === todoId));
   };
 
-  const toggleSubTask = (todoId, subTaskId) => {
-    saveHistory();
-    setTodos(todos.map(todo => {
+  const toggleSubTask = async (todoId, subTaskId) => {
+    const newTodos = todos.map(todo => {
       if (todo.id === todoId) {
         return {
           ...todo,
@@ -236,43 +236,41 @@ function App() {
         };
       }
       return todo;
-    }));
+    });
+    setTodos(newTodos);
     audio.playPencil();
+    await saveTodo(newTodos.find(t => t.id === todoId));
   };
 
-  const deleteSubTask = (todoId, subTaskId) => {
-    saveHistory();
+  const deleteSubTask = async (todoId, subTaskId) => {
     audio.playCrumple();
-    
-    const todo = todos.find(t => t.id === todoId);
-    const subTask = todo?.subTasks.find(st => st.id === subTaskId);
-    if (subTask && subTask.completed) logActivity(-1);
-
-    if (activeSubTask?.subTaskId === subTaskId) {
-      setActiveSubTask(null);
-    }
-    setTodos(todos.map(todo => {
+    const newTodos = todos.map(todo => {
       if (todo.id === todoId) {
+        const subTask = todo.subTasks.find(st => st.id === subTaskId);
+        if (subTask && subTask.completed) logActivity(-1);
+        if (activeSubTask?.subTaskId === subTaskId) setActiveSubTask(null);
         return {
           ...todo,
           subTasks: todo.subTasks.filter(st => st.id !== subTaskId)
         };
       }
       return todo;
-    }));
+    });
+    setTodos(newTodos);
+    await saveTodo(newTodos.find(t => t.id === todoId));
   };
 
-  const editTodo = (id, newText) => {
-    saveHistory();
-    setTodos(todos.map(todo => 
+  const editTodo = async (id, newText) => {
+    const newTodos = todos.map(todo => 
       todo.id === id ? { ...todo, text: newText } : todo
-    ));
+    );
+    setTodos(newTodos);
     audio.playPencil();
+    await saveTodo(newTodos.find(t => t.id === id));
   };
 
-  const editSubTask = (todoId, subTaskId, newText, image = undefined) => {
-    saveHistory();
-    setTodos(todos.map(todo => {
+  const editSubTask = async (todoId, subTaskId, newText, image = undefined) => {
+    const newTodos = todos.map(todo => {
       if (todo.id === todoId) {
         return {
           ...todo,
@@ -289,8 +287,10 @@ function App() {
         };
       }
       return todo;
-    }));
+    });
+    setTodos(newTodos);
     audio.playPencil();
+    await saveTodo(newTodos.find(t => t.id === todoId));
   };
 
   const startFocus = (todoId, subTaskId) => {
@@ -312,7 +312,6 @@ function App() {
     let streak = 0;
     let checkDate = new Date();
     
-    // Check if today or yesterday has activity to start/continue streak
     const todayStr = checkDate.toLocaleDateString('en-CA');
     checkDate.setDate(checkDate.getDate() - 1);
     const yesterdayStr = checkDate.toLocaleDateString('en-CA');
@@ -321,14 +320,13 @@ function App() {
       streak = 1;
       checkDate = new Date();
     } else if (activityLog[yesterdayStr] > 0) {
-      streak = 0; // Streak hasn't died yet, but today isn't counted yet
+      streak = 0; 
       checkDate = new Date();
       checkDate.setDate(checkDate.getDate() - 1);
     } else {
       return 0;
     }
 
-    // Traverse backwards
     while (true) {
       checkDate.setDate(checkDate.getDate() - 1);
       const dStr = checkDate.toLocaleDateString('en-CA');
@@ -342,13 +340,13 @@ function App() {
   };
 
   const selectedTodo = todos.find(t => t.id === selectedTodoId);
-
   const todayStr = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+  if (isLoading) return <div style={{ color: '#aaa', textAlign: 'center', padding: '100px' }}>Loading Protocol...</div>;
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <div className="app-layout">
-        {/* Mobile Sticky Header */}
         <div className="command-header mobile-only">
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
             <div style={{ fontWeight: 'bold', fontSize: '0.9em', color: '#666' }}>{todayStr}</div>
@@ -357,15 +355,13 @@ function App() {
           <PomodoroTimer variant="header" activeSubTaskName={getActiveSubTaskName()} />
         </div>
 
-        <DragDropContext onDragEnd={handleDragEnd} key={activeTab}>
-          <TaskSidebar
-            todos={todos}
-            selectedTodoId={selectedTodoId}
-            onSelectTodo={setSelectedTodoId}
-            onAddTodo={addTodo}
-            className={activeTab === 'archive' ? 'mobile-show' : 'mobile-hide'}
-          />
-        </DragDropContext>
+        <TaskSidebar
+          todos={todos}
+          selectedTodoId={selectedTodoId}
+          onSelectTodo={setSelectedTodoId}
+          onAddTodo={addTodo}
+          className={activeTab === 'archive' ? 'mobile-show' : 'mobile-hide'}
+        />
 
         <div className={`paper-container ${activeTab === 'focus' ? 'mobile-show' : 'mobile-hide'}`}>
           <div className="left-segment">
@@ -403,7 +399,6 @@ function App() {
           </div>
         </div>
 
-        {/* Mobile Bottom Matrix */}
         <div className="bottom-matrix mobile-only">
           <button 
             className={`tab-item ${activeTab === 'archive' ? 'active' : ''}`}
