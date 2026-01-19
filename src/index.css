@@ -37,8 +37,9 @@ body {
     .sidebar-list {
       flex-grow: 1;
       overflow-y: auto;
+      overflow-x: hidden;
       margin-top: 20px;
-      padding-right: 10px;
+      padding-right: 5px;
       min-height: 100px;
     }
 

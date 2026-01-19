@@ -27,7 +27,6 @@ function TaskSidebar({ todos, selectedTodoId, onSelectTodo, onAddTodo, className
             className="sidebar-list" 
             {...provided.droppableProps} 
             ref={provided.innerRef} 
-            style={{ flexGrow: 1, overflowY: 'auto' }}
           >
             {todos.map((todo, index) => {
               const completedCount = todo.subTasks.filter(st => st.completed).length;
