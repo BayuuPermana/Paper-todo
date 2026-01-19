@@ -1,7 +1,7 @@
 {
-  "active": true,
+  "active": false,
   "task": "Migrate to Tauri desktop app with SQLite storage",
   "iteration": 0,
   "max_iterations": 20,
-  "step": "prd"
+  "step": "done"
 }

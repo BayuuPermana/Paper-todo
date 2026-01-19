@@ -1,7 +1,7 @@
 ---
 id: desk-001
 title: "Tauri Scaffolding and SQLite Setup"
-status: In Dev
+status: Done
 priority: High
 project: project
 created: 2026-01-19

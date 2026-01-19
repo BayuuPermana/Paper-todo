@@ -1,7 +1,7 @@
 ---
 id: desk-002
 title: "Migrate App State to SQLite"
-status: In Dev
+status: Done
 priority: High
 project: project
 created: 2026-01-19
