@@ -13,6 +13,17 @@ Most apps are bloated slop. This one? It’s lean. It’s mean. It’s got a "Pa
 - **GodAudio™**: Every action has a sound. Pencil scribbles, paper rustles, and chimes. It’s immersive, okay? Stop asking questions.
 - **Scribble Completion**: When you finish a task, we don't just "check" a box. We strike it through with a raw, aggressive scribble. It's satisfying. It’s art.
 
+## 🖼️ Visual Artifacts
+
+### Desktop View
+![Desktop Dashboard](./Todo-app.png)
+
+### Mobile Intelligence
+<div align="center">
+  <img src="./Todo-mobile-a.png" width="45%" alt="Mobile Archive" />
+  <img src="./Todo-mobile-B.png" width="45%" alt="Mobile Focus" />
+</div>
+
 ## 🛠️ How to run this digital artifact (for Jerries)
 
 If you have `Bun` (and hopefully a brain), follow these steps:
