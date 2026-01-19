@@ -1,53 +1,59 @@
-# Tauri & SQLite Migration PRD
+# Autosave & Persistence Indicator PRD
 
 ## HR Eng
 
-| Tauri & SQLite PRD |  | [Summary: Transmute the web app into a native desktop application using Tauri (Rust) and replace localStorage with a persistent SQLite database.] |
+| Autosave & Persistence |  | Robust data persistence with visual feedback for the user. |
 | :---- | :---- | :---- |
-| **Author**: Pickle Rick **Contributors**: Morty **Intended audience**: Engineering | **Status**: Draft **Created**: 2026-01-19 | **Self Link**: N/A **Context**: Paper-todo **Visibility**: Public |
+| **Author**: Pickle Rick **Contributors**: User **Intended audience**: Engineering | **Status**: Active **Created**: 2026-01-20 | **Self Link**: .pickle/prd.md **Visibility**: Internal |
 
 ## Introduction
 
-Web storage is for Jerries. We need a real database that won't disappear when the browser gets "cleaned." We're moving to Tauri for a native desktop experience and SQLite for industrial-grade local storage.
+The application currently saves data on state changes, but lacks visual feedback. This feature adds a "Saving..." / "Saved" indicator and verifies the robustness of the `AppLocalData` persistence layer.
 
 ## Problem Statement
 
-**Current Process:** App runs in browser, uses `localStorage`.
-**Primary Users:** Desktop power users.
-**Pain Points:** Data fragility, non-native feel, browser overhead.
-**Importance:** Performance, reliability, and "God-tier" engineering.
+**Current Process:** Users edit tasks, but have no confirmation that data is written to disk.
+**Pain Points:** Anxiety about data loss. Uncertainty if the app is working.
+**Importance:** Data integrity is the core value proposition of a todo app.
 
 ## Objective & Scope
 
-**Objective:** Fully functional Tauri desktop app with SQLite persistence.
-**Ideal Outcome:** A raw executable file that launches the "Paper-todo" experience with zero data loss risk.
+**Objective:** Ensure 100% data persistence confidence.
+**Ideal Outcome:** User sees a subtle indicator when data is saved.
 
 ### In-scope or Goals
-- Tauri scaffolding.
-- SQLite integration via `tauri-plugin-sql`.
-- Migration of `App.jsx` state management to database queries.
-- Data persistence for Todos and Activity Log.
+- Verify `db.js` writes to `AppLocalData`.
+- Implement a global `isSaving` state in `App.jsx`.
+- Create a visual `SavingIndicator` component (e.g., bottom right or top header).
+- Ensure `onBlur` and other events trigger the save and the indicator.
 
 ### Not-in-scope or Non-Goals
-- Mobile configuration (as per user request).
-- Cloud sync (local only).
+- User configuration for autosave (Always On).
+- Cloud sync (Local only).
 
 ## Product Requirements
 
 ### Critical User Journeys (CUJs)
-1. **Launch App**: User opens the desktop app. It loads data instantly from SQLite.
-2. **Persistence**: User adds a task, closes the app, reopens it. Data is exactly where it was.
+1. **Edit Task**: User modifies a task text -> "Saving..." appears -> "Saved" appears -> Indicator fades.
+2. **Toggle Completion**: User checks a box -> Indicator flashes "Saved".
 
 ### Functional Requirements
 
 | Priority | Requirement | User Story |
 | :---- | :---- | :---- |
-| P0 | Tauri Integration | As a user, I want a native desktop app. |
-| P0 | SQLite Storage | As a user, I want my data saved in a real database. |
-| P1 | Auto-Migration | As a user, I want my existing localStorage data to move to SQLite (nice to have). |
+| P0 | Data writes to correct local path | As a user, my data survives a restart. |
+| P1 | Visual Feedback | As a user, I see when the app is saving. |
+| P2 | Debounced Saves | As a system, I don't write to disk on every keystroke (if we move to onChange). |
+
+## Assumptions
+- `AppLocalData` is accessible and writable.
+- Write speeds are fast enough to not block UI.
+
+## Risks & Mitigations
+- **Risk**: Frequent writes slow down the app. -> **Mitigation**: Use `onBlur` for text, immediate for toggles. Add debounce if needed.
 
 ## Business Benefits/Impact/Metrics
+- **Success Metrics**: Zero data loss reports.
 
-**Success Metrics:**
-- App launches natively.
-- CRUD operations work against SQLite.
+## Stakeholders / Owners
+- **Owner**: Pickle Rick

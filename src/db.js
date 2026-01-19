@@ -1,10 +1,23 @@
 import Database from '@tauri-apps/plugin-sql';
+import { appLocalDataDir, join } from '@tauri-apps/api/path';
+import { mkdir, exists, BaseDirectory } from '@tauri-apps/plugin-fs';
 
 let db = null;
 
 export const initDb = async () => {
   if (db) return db;
-  db = await Database.load('sqlite:paper-todo.db');
+
+  const appDataDirPath = await appLocalDataDir();
+  const dbPath = await join(appDataDirPath, 'paper-todo.db');
+  
+  // Ensure the directory exists
+  const dirExists = await exists(appDataDirPath);
+  if (!dirExists) {
+    await mkdir(appDataDirPath, { recursive: true });
+  }
+
+  // We use the absolute path with the sqlite: prefix
+  db = await Database.load(`sqlite:${dbPath}`);
   
   // Create tables if they don't exist
   await db.execute(`

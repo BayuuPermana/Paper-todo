@@ -1,22 +1,22 @@
 ---
-id: epic-dnd-image
-title: "[Epic] Drag & Drop and Image Polish"
-status: Done
-priority: High
+id: fix-persistence-epic
+title: [Epic] Fix Persistence in Build
+status: Active
+priority: Urgent
 project: project
 created: 2026-01-19
 updated: 2026-01-19
 links:
-  - url: prd.md
+  - url: ../prd.md
     title: PRD
-labels: [epic, ui, ux]
+labels: [core, bug, build]
 assignee: Pickle Rick
 ---
 
 # Description
 
 ## Problem to solve
-Subtasks cannot be reordered, image quality is poor, and the "tape" aesthetic is barely visible. The UI needs to feel more like a physical paper notebook.
+Production builds fail to save data because they write to `Program Files`.
 
 ## Solution
-Implement subtask drag-and-drop, upgrade image processing to preserve quality, enhance tape CSS, and standardize image display sizes.
+Relocate database to `AppLocalData`.

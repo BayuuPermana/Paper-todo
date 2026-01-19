@@ -5,6 +5,7 @@ import TodoList from './TodoList';
 import PomodoroTimer from './PomodoroTimer';
 import PaperCalendar from './PaperCalendar';
 import TaskSidebar from './TaskSidebar';
+import SavingIndicator from './SavingIndicator';
 import { audio } from './utils/GodAudio';
 import { getTodos, saveTodo, deleteTodoDb, getActivityLog, saveActivityLog } from './db';
 
@@ -15,6 +16,19 @@ function App() {
   const [activeTab, setActiveTab] = useState('archive'); // 'archive' or 'focus'
   const [activeSubTask, setActiveSubTask] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Helper for saving indication
+  const withSaving = async (fn) => {
+    setIsSaving(true);
+    try {
+      await fn();
+    } catch (err) {
+      console.error("Save failed:", err);
+    } finally {
+      setTimeout(() => setIsSaving(false), 800);
+    }
+  };
 
   // Initial Data Load & Migration
   useEffect(() => {
@@ -118,7 +132,7 @@ function App() {
     const today = new Date().toLocaleDateString('en-CA');
     const newPts = Math.max(0, (activityLog[today] || 0) + pts);
     setActivityLog(prev => ({ ...prev, [today]: newPts }));
-    await saveActivityLog(today, newPts);
+    withSaving(() => saveActivityLog(today, newPts));
   };
 
   const handleDragEnd = async (result) => {
@@ -131,9 +145,11 @@ function App() {
       newItems.splice(destination.index, 0, reorderedItem);
       setTodos(newItems);
       // Persist reorder
-      for (let i = 0; i < newItems.length; i++) {
-        await saveTodo({ ...newItems[i], order_index: i });
-      }
+      withSaving(async () => {
+        for (let i = 0; i < newItems.length; i++) {
+          await saveTodo({ ...newItems[i], order_index: i });
+        }
+      });
     } else if (source.droppableId.startsWith('subtasks-')) {
       const todoId = source.droppableId.replace('subtasks-', '');
       const newTodos = todos.map(todo => {
@@ -147,7 +163,7 @@ function App() {
       });
       setTodos(newTodos);
       const updatedTodo = newTodos.find(t => t.id === todoId);
-      await saveTodo(updatedTodo);
+      withSaving(() => saveTodo(updatedTodo));
     }
   };
 
@@ -164,7 +180,7 @@ function App() {
     setTodos(newTodos);
     setSelectedTodoId(newTodo.id);
     audio.playPencil();
-    await saveTodo(newTodo);
+    withSaving(() => saveTodo(newTodo));
   };
 
   const toggleComplete = async (id) => {
@@ -178,7 +194,7 @@ function App() {
     });
     setTodos(newTodos);
     audio.playPencil();
-    await saveTodo(newTodos.find(t => t.id === id));
+    withSaving(() => saveTodo(newTodos.find(t => t.id === id)));
   };
 
   const deleteTodo = async (id) => {
@@ -195,7 +211,7 @@ function App() {
       if (id === selectedTodoId) {
         setSelectedTodoId(newTodos.length > 0 ? newTodos[0].id : null);
       }
-      await deleteTodoDb(id);
+      withSaving(() => deleteTodoDb(id));
     }, 400);
   };
 
@@ -214,7 +230,7 @@ function App() {
     });
     setTodos(newTodos);
     audio.playPencil();
-    await saveTodo(newTodos.find(t => t.id === todoId));
+    withSaving(() => saveTodo(newTodos.find(t => t.id === todoId)));
   };
 
   const toggleSubTask = async (todoId, subTaskId) => {
@@ -239,7 +255,7 @@ function App() {
     });
     setTodos(newTodos);
     audio.playPencil();
-    await saveTodo(newTodos.find(t => t.id === todoId));
+    withSaving(() => saveTodo(newTodos.find(t => t.id === todoId)));
   };
 
   const deleteSubTask = async (todoId, subTaskId) => {
@@ -257,7 +273,7 @@ function App() {
       return todo;
     });
     setTodos(newTodos);
-    await saveTodo(newTodos.find(t => t.id === todoId));
+    withSaving(() => saveTodo(newTodos.find(t => t.id === todoId)));
   };
 
   const editTodo = async (id, newText) => {
@@ -266,7 +282,7 @@ function App() {
     );
     setTodos(newTodos);
     audio.playPencil();
-    await saveTodo(newTodos.find(t => t.id === id));
+    withSaving(() => saveTodo(newTodos.find(t => t.id === id)));
   };
 
   const editSubTask = async (todoId, subTaskId, newText, image = undefined) => {
@@ -290,7 +306,7 @@ function App() {
     });
     setTodos(newTodos);
     audio.playPencil();
-    await saveTodo(newTodos.find(t => t.id === todoId));
+    withSaving(() => saveTodo(newTodos.find(t => t.id === todoId)));
   };
 
   const startFocus = (todoId, subTaskId) => {
@@ -347,6 +363,7 @@ function App() {
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <div className="app-layout">
+        <SavingIndicator isSaving={isSaving} />
         <div className="command-header mobile-only">
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
             <div style={{ fontWeight: 'bold', fontSize: '0.9em', color: '#666' }}>{todayStr}</div>
