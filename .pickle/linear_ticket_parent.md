@@ -1,7 +1,7 @@
 ---
 id: epic-dnd-image
 title: "[Epic] Drag & Drop and Image Polish"
-status: Backlog
+status: Done
 priority: High
 project: project
 created: 2026-01-19

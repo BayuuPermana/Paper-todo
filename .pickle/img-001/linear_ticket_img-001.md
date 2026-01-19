@@ -1,7 +1,7 @@
 ---
 id: img-001
 title: "Image Quality and Tape Aesthetic Polish"
-status: Triage
+status: Done
 priority: Medium
 project: project
 created: 2026-01-19

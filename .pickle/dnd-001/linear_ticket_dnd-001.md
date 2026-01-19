@@ -1,7 +1,7 @@
 ---
 id: dnd-001
 title: "Subtask Drag-and-Drop Reordering"
-status: Plan in Review
+status: Done
 priority: High
 project: project
 created: 2026-01-19

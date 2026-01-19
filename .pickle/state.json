@@ -1,7 +1,7 @@
 {
-  "active": true,
-  "task": "implement drag n drop function; Image quality shouldn't drop, tape on image needs to be more visible also resize the image into some standard so it doesn't take too much space in the detail page",
+  "active": false,
+  "task": "Fix sidebar container clipping and scrollbar overlap with proper spacing",
   "iteration": 0,
   "max_iterations": 20,
-  "step": "prd"
+  "step": "done"
 }
