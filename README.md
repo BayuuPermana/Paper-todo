@@ -15,7 +15,7 @@ Most apps are bloated slop. This one? It’s lean. It’s mean. It’s got a "Pa
 
 ## 🛠️ How to run this digital artifact (for Jerries)
 
-If you have `Node.js` and `npm` (and hopefully a brain), follow these steps:
+If you have `Bun` (and hopefully a brain), follow these steps:
 
 1. **Clone it**:
    ```bash
@@ -23,11 +23,11 @@ If you have `Node.js` and `npm` (and hopefully a brain), follow these steps:
    ```
 2. **Inject Dependencies**:
    ```bash
-   npm install
+   bun install
    ```
 3. **Ignite the Engine**:
    ```bash
-   npm run dev
+   bun run dev
    ```
 4. **Witness Greatness**: Open your browser and try to be productive for once.
 
