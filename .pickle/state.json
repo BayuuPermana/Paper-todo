@@ -1,7 +1,7 @@
 {
-  "active": false,
-  "task": "Fix sidebar container clipping and scrollbar overlap with proper spacing",
+  "active": true,
+  "task": "Migrate to Tauri desktop app with SQLite storage",
   "iteration": 0,
   "max_iterations": 20,
-  "step": "done"
+  "step": "prd"
 }
