@@ -48,7 +48,6 @@ function TaskSidebar({ todos, selectedTodoId, onSelectTodo, onAddTodo, className
                         role="button"
                         onClick={() => onSelectTodo(todo.id)}
                         style={{
-                          width: '100%',
                           textAlign: 'left',
                           padding: '8px 12px',
                           border: '2px solid black',
@@ -62,7 +61,8 @@ function TaskSidebar({ todos, selectedTodoId, onSelectTodo, onAddTodo, className
                           justifyContent: 'space-between',
                           transition: 'all 0.1s',
                           opacity: snapshot.isDragging ? 0.8 : 1,
-                          userSelect: 'none'
+                          userSelect: 'none',
+                          margin: '0 5px'
                         }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>

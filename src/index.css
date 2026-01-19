@@ -39,7 +39,7 @@ body {
       overflow-y: auto;
       overflow-x: hidden;
       margin-top: 20px;
-      padding-right: 15px; /* Increased for scrollbar gutter */
+      padding: 10px 25px 10px 10px;
       min-height: 100px;
     }
 
